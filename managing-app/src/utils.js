@@ -12,7 +12,8 @@ export async function sendGet(url) {
     return await fetch(url, {
         method: 'GET',
         headers: {
-            'Content-Type': 'application/json'
+            'Content-Type': 'application/json',
+            'Accept': 'application/json'
         }
     })
 }

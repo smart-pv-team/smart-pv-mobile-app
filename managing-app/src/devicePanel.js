@@ -35,8 +35,8 @@ const AntSwitch = styled(Switch)(({theme}) => ({
     },
 }));
 
-const urlParameters = "http://127.0.0.1:3005/parameters/device/"
-const urlIsOn = "http://127.0.0.1:3005/parameters/device/{id}/isOn"
+const urlParameters = "http://127.0.0.1:8080/managing/parameters/device/"
+const urlIsOn = "http:///127.0.0.1:8080/managing/parameters/device/{id}/isOn"
 
 export default function DevicePanel({deviceId, parameters}) {
     const [values, setValues] = useState(parameters);
@@ -46,24 +46,34 @@ export default function DevicePanel({deviceId, parameters}) {
         sendPost(urlParameters.concat(deviceId), values).then(() => console.log(`Sending update ${deviceId}: ${values}`));
 
         async function polling() {
-            const response = await sendGet(urlIsOn.replace('{id}', deviceId)).then(r => console.log(`Received is ${deviceId} on: ${r.body.isOn}`))
-            setIsDeviceOn(response.body.isOn);
-            setTimeout(polling, 5000);
+            const response = await sendGet(urlIsOn.replace('{id}', deviceId)).then(response => response.json());
+            setIsDeviceOn(response);
+            setTimeout(polling, 20000);
         }
 
         polling()
-    })
+    }, [])
+
+    useEffect(() => {
+        sendPost(urlIsOn.replace('{id}', deviceId), {"isOn": isDeviceOn}).then(() => console.log(`Sending update ${deviceId}: ${isDeviceOn}`));
+    }, [isDeviceOn]);
+
+    useEffect(() => {
+        sendPost(urlParameters.concat(deviceId), values).then(() => console.log(`Sending update ${deviceId}: ${values}`));
+    }, [values]);
 
     const handleChangeOnButton = (event) => {
         setIsDeviceOn(event.target.checked);
-        sendPost(urlIsOn.replace('{id}', deviceId), isDeviceOn).then(() => console.log(`Sending update ${deviceId}: ${isDeviceOn}`));
+        const desiredKey = "isOn", desiredValue = event.target.checked, value = {[desiredKey]: desiredValue};
+        setValues({
+            ...values, ...value
+        });
     }
     const handleChangeTextField = (event) => {
         const desiredKey = event.target.id, desiredValue = event.target.value, value = {[desiredKey]: desiredValue};
         setValues({
             ...values, ...value
         });
-        sendPost(urlParameters.concat(deviceId), values).then(() => console.log(`Sending update ${deviceId}: ${values}`));
     }
 
     return (<Box sx={{mb: 1, mt: 1}}>
@@ -75,7 +85,9 @@ export default function DevicePanel({deviceId, parameters}) {
                 <ElectricalServicesIcon/>
             </Grid>
             <Stack direction="row" spacing={2} sx={{m: 3}}>
-                {Object.entries(values).map(([label, value]) => (<TextField
+                {Object.entries(values).filter(([label, value]) => {
+                    return label !== "isOn"
+                }).map(([label, value]) => (<TextField
                     id={label}
                     label={label}
                     type="number"

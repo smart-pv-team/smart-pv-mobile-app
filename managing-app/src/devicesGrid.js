@@ -1,24 +1,37 @@
 import DevicePanel from "./devicePanel";
 import Grid from "@mui/material/Grid";
+import {sendGet, sendPost} from "./utils";
+import {useState, useEffect} from "react";
+
+const devicesUrl = "http://127.0.0.1:8080/managing/devices"
+const urlParameters = "http://127.0.0.1:8080/managing/parameters/device/"
 
 export default function DevicesGrid() {
     const parameters = {
-        "devicePower": 2,
+        "priority": 2,
+        "powerConsumption": 2,
         "minHysteresis": 2,
-        "maxHysteresis": 3
+        "maxHysteresis": 3,
+        "isOn": "false"
     }
+    const [devices, setDevices] = useState([]);
+    useEffect(() => {
+        async function getDevices() {
+            const response = await sendGet(devicesUrl).then(response => response.json())
+            setDevices(response);
+        }
+
+        getDevices();
+    }, []);
     return (
-        <Grid container justifyContent="space-evenly" sx = {{mt:5}}
+        <Grid container justifyContent="space-evenly" sx={{mt: 5}}
               direction="column" alignItems="flex-start">
-            <Grid item>
-                <DevicePanel deviceId='1' parameters={parameters}/>
-            </Grid>
-            <Grid item>
-                <DevicePanel deviceId='2' parameters={parameters}/>
-            </Grid>
-            <Grid item>
-                <DevicePanel deviceId='3' parameters={parameters}/>
-            </Grid>
+            {devices.map((device) => (
+                    <Grid item>
+                        <DevicePanel deviceId={device} parameters={parameters}/>
+                    </Grid>
+                )
+            )}
         </Grid>
     )
 }
