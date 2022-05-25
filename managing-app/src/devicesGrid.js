@@ -12,7 +12,8 @@ export default function DevicesGrid() {
         "powerConsumption": 2,
         "minHysteresis": 2,
         "maxHysteresis": 3,
-        "isOn": "false"
+        "isOn": "false",
+        "isLocked": "false"
     }
     const [devices, setDevices] = useState([]);
     useEffect(() => {

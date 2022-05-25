@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from 'react';
-import {TextField, Stack, Switch} from "@mui/material";
+import {TextField, Stack, Switch, Checkbox, FormControlLabel} from "@mui/material";
 import {Box, Typography, Grid} from "@mui/material";
 import ElectricalServicesIcon from '@mui/icons-material/ElectricalServices';
 import {styled} from "@mui/material/styles";
@@ -41,6 +41,7 @@ const urlIsOn = "http:///127.0.0.1:8080/managing/parameters/device/{id}/isOn"
 export default function DevicePanel({deviceId, parameters}) {
     const [values, setValues] = useState(parameters);
     const [isDeviceOn, setIsDeviceOn] = useState(false);
+    const [auto, setAuto] = useState(false);
 
     useEffect(() => {
         sendPost(urlParameters.concat(deviceId), values).then(() => console.log(`Sending update ${deviceId}: ${values}`));
@@ -64,6 +65,7 @@ export default function DevicePanel({deviceId, parameters}) {
 
     const handleChangeOnButton = (event) => {
         setIsDeviceOn(event.target.checked);
+        setAuto(false);
         const desiredKey = "isOn", desiredValue = event.target.checked, value = {[desiredKey]: desiredValue};
         setValues({
             ...values, ...value
@@ -74,6 +76,9 @@ export default function DevicePanel({deviceId, parameters}) {
         setValues({
             ...values, ...value
         });
+    }
+    const handleChangeAutoCheckbox = (event) => {
+        setAuto(event.target.checked);
     }
 
     return (<Box sx={{mb: 1, mt: 1}}>
@@ -86,7 +91,7 @@ export default function DevicePanel({deviceId, parameters}) {
             </Grid>
             <Stack direction="row" spacing={2} sx={{m: 3}}>
                 {Object.entries(values).filter(([label, value]) => {
-                    return label !== "isOn"
+                    return label !== "isOn" && label !== "auto"
                 }).map(([label, value]) => (<TextField
                     id={label}
                     label={label}
@@ -104,6 +109,18 @@ export default function DevicePanel({deviceId, parameters}) {
                            onChange={handleChangeOnButton}
                            defaultChecked inputProps={{'aria-label': 'ant design'}}/>
                 <Typography>On</Typography>
+                
+                <FormControlLabel
+                    control = {<Checkbox
+                        label="auto"
+                        // value={auto}
+                        checked={auto}
+                        onChange={handleChangeAutoCheckbox}
+                    />}
+                    label="auto"
+                />
+                
+
             </Stack>
         </Grid>
     </Box>);
