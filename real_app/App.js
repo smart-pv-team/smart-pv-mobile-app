@@ -2,6 +2,8 @@ import { StatusBar } from "expo-status-bar";
 import React, { useState } from "react";
 import { StyleSheet, Text, View, Button } from "react-native";
 import MeasuringDeviceScreen from "./src/screens/MeasuringDevice/MeasuringDeviceScreen";
+import Navigator from "./src/navigation/HomeStack";
+import MeasuringDeviceMiniature from "./src/components/MeasuringDeviceMiniature/MeasuringDeviceMiniature";
 
 export default function App() {
   const [name, setName] = useState("Adam");
@@ -17,18 +19,22 @@ export default function App() {
   };
 
   return (
-    <MeasuringDeviceScreen></MeasuringDeviceScreen>
-    //   <View style={styles.container}>
-    //     <View style={styles.header}>
-    //       <Text style={styles.boldText}>My name is {name}</Text>
-    //       <Text>
-    //         His name is {person.name} and he is {person.age}
-    //       </Text>
-    //     </View>
-    //     <View style={styles.buttonContainer}>
-    //       <Button title="update state" onPress={clickHandler} />
-    //     </View>
+    <Navigator />
+    // <MeasuringDeviceMiniature></MeasuringDeviceMiniature>
+
+    // <MeasuringDeviceScreen></MeasuringDeviceScreen>
+
+    // <View style={styles.container}>
+    //   <View style={styles.header}>
+    //     <Text style={styles.boldText}>My name is {name}</Text>
+    //     <Text>
+    //       His name is {person.name} and he is {person.age}
+    //     </Text>
     //   </View>
+    //   <View style={styles.buttonContainer}>
+    //     <Button title="update state" onPress={clickHandler} />
+    //   </View>
+    // </View>
   );
 }
 

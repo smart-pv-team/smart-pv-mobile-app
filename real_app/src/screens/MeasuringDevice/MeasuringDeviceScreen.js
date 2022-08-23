@@ -2,6 +2,8 @@ import React, { useState } from "react";
 import { Text, View, Button, Image, StatusBar } from "react-native";
 import styles from "./styles.js";
 
+//the whole device info view should be substituted by a custom component
+
 export default function MeasuringDeviceScreen() {
   return (
     <View style={styles.container}>
