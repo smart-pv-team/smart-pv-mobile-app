@@ -2,7 +2,7 @@ import { StatusBar } from "expo-status-bar";
 import React, { useState } from "react";
 import { StyleSheet, Text, View, Button } from "react-native";
 import MeasuringDeviceScreen from "./src/screens/MeasuringDevice/MeasuringDeviceScreen";
-import Navigator from "./src/navigation/HomeStack";
+import Navigator from "./src/navigation/Drawer";
 import MeasuringDeviceMiniature from "./src/components/MeasuringDeviceMiniature/MeasuringDeviceMiniature";
 
 export default function App() {

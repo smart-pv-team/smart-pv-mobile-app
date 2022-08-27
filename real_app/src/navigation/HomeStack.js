@@ -1,13 +1,19 @@
 import { createStackNavigator } from "react-navigation-stack";
-import { createAppContainer } from "react-navigation";
 import HomeScreen from "../screens/Home/HomeScreen";
 import MeasuringDevicesScreen from "../screens/MeasuringDevices/MeasuringDevicesScreen";
 import MeasuringDeviceScreen from "../screens/MeasuringDevice/MeasuringDeviceScreen";
 import ConsumerDevicesScreen from "../screens/ConsumerDevices/ConsumerDevicesScreen";
+import Header from "../components/Header/Header";
+import React from "react";
 
 const screens = {
   Home: {
     screen: HomeScreen,
+    navigationOptions: ({ navigation }) => {
+      return {
+        headerTitle: () => <Header navigation={navigation} title="Home" />,
+      };
+    },
   },
   ConsumerDevices: {
     screen: ConsumerDevicesScreen,
@@ -20,6 +26,6 @@ const screens = {
   },
 };
 
-const Stack = createStackNavigator(screens);
+const HomeStack = createStackNavigator(screens);
 
-export default createAppContainer(Stack);
+export default HomeStack;
