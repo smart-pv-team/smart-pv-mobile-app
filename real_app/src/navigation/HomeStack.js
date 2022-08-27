@@ -15,15 +15,6 @@ const screens = {
       };
     },
   },
-  ConsumerDevices: {
-    screen: ConsumerDevicesScreen,
-  },
-  MeasuringDevices: {
-    screen: MeasuringDevicesScreen,
-  },
-  MeasuringDevice: {
-    screen: MeasuringDeviceScreen,
-  },
 };
 
 const HomeStack = createStackNavigator(screens);
