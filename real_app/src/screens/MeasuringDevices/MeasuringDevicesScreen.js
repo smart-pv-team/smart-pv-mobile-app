@@ -24,38 +24,58 @@ export default function MeasuringDeviceScreen({ navigation }) {
       image: "../../../assets/as-unit.webp",
       key: "2",
     },
+    {
+      deviceName: "Device2",
+      powerConsumption: 5,
+      image: "../../../assets/as-unit.webp",
+      key: "3",
+    },
+    {
+      deviceName: "Device2",
+      powerConsumption: 5,
+      image: "../../../assets/as-unit.webp",
+      key: "4",
+    },
+    {
+      deviceName: "Device2",
+      powerConsumption: 5,
+      image: "../../../assets/as-unit.webp",
+      key: "5",
+    },
   ]);
 
   const renderDevice = ({ item }) => {
     <TouchableOpacity
       onPress={() => navigation.navigate("MeasuringDevice", item)}
     >
-      <View style={styles.container}>
+      <View style={styles.miniatureContainer}>
         <Image style={styles.deviceImage} source={{ uri: item.image }}></Image>
         <Text>{item.deviceName}</Text>
       </View>
     </TouchableOpacity>;
   };
 
-  // return (
-  //   <View>
-  //     <StatusBar></StatusBar>
-  //     <FlatList numColumns={1} data={devices} renderItem={renderDevice} />
-  //   </View>
-  // );
   return (
-    <View>
+    <View style={styles.container}>
       <StatusBar></StatusBar>
-      <FlatList
-        data={devices}
-        renderItem={({ item }) => (
-          <TouchableOpacity
-            onPress={() => navigation.navigate("MeasuringDevice", item)}
-          >
-            <MeasuringDeviceMiniature></MeasuringDeviceMiniature>
-          </TouchableOpacity>
-        )}
-      />
+      <View style={styles.devicesList}>
+        <FlatList
+          showsVerticalScrollIndicator={false}
+          data={devices}
+          renderItem={({ item }) => (
+            <TouchableOpacity
+              onPress={() => navigation.navigate("MeasuringDevice", item)}
+            >
+              {/* <View style={{ backgroundColor: "red" }}> */}
+              <MeasuringDeviceMiniature
+                powerConsumption={item.powerConsumption}
+                style={{ flex: 1 }}
+              ></MeasuringDeviceMiniature>
+              {/* </View> */}
+            </TouchableOpacity>
+          )}
+        />
+      </View>
     </View>
   );
 }

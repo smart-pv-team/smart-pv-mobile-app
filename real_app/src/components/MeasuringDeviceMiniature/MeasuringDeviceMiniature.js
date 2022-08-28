@@ -6,23 +6,20 @@ import React, { useState } from "react";
 import { Text, View, Image } from "react-native";
 import styles from "./styles";
 
-export default function MeasuringDeviceMiniature() {
+export default function MeasuringDeviceMiniature({ powerConsumption }) {
   return (
-    <View style={styles.container}>
-      <View style={{ flex: 1 }}>
-        <Image
-          style={styles.deviceImage}
-          source={require("../../../assets/ac-unit.webp")}
-        ></Image>
-      </View>
-      <View style={styles.briefInfo}>
-        <View>
-          <Text>lalal</Text>
-          <Text>lalal</Text>
+    <View style={styles.spaceBetween}>
+      <View style={styles.container}>
+        <View style={styles.imageContainer}>
+          <Image
+            style={styles.deviceImage}
+            source={require("../../../assets/ac-unit.webp")}
+          ></Image>
         </View>
-        <View>
-          <Text>lalal</Text>
-          <Text>lalal</Text>
+        <View style={styles.briefInfo}>
+          <View>
+            <Text>Power consum: {powerConsumption}</Text>
+          </View>
         </View>
       </View>
     </View>
