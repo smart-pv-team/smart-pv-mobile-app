@@ -15,6 +15,12 @@ export default function Header({ navigation, title }) {
         onPress={openMenu}
         style={styles.icon}
       />
+      <MaterialIcons
+        name="settings"
+        size={28}
+        onPress={openMenu}
+        // style={{ display: "none" }}
+      />
       <View>
         <Text style={styles.headerText}>{title}</Text>
       </View>

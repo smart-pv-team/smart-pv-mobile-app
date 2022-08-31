@@ -16,30 +16,35 @@ export default function MeasuringDeviceScreen({ navigation }) {
       deviceName: "Device1",
       powerConsumption: 2,
       image: "../../../assets/as-unit.webp",
+      status: "On",
       key: "1",
     },
     {
       deviceName: "Device2",
       powerConsumption: 5,
       image: "../../../assets/as-unit.webp",
+      status: "On",
       key: "2",
     },
     {
       deviceName: "Device2",
       powerConsumption: 5,
       image: "../../../assets/as-unit.webp",
+      status: "Off",
       key: "3",
     },
     {
       deviceName: "Device2",
       powerConsumption: 5,
       image: "../../../assets/as-unit.webp",
+      status: "Off",
       key: "4",
     },
     {
       deviceName: "Device2",
       powerConsumption: 5,
       image: "../../../assets/as-unit.webp",
+      status: "On",
       key: "5",
     },
   ]);
@@ -69,6 +74,7 @@ export default function MeasuringDeviceScreen({ navigation }) {
               {/* <View style={{ backgroundColor: "red" }}> */}
               <MeasuringDeviceMiniature
                 powerConsumption={item.powerConsumption}
+                deviceStatus={item.status}
                 style={{ flex: 1 }}
               ></MeasuringDeviceMiniature>
               {/* </View> */}

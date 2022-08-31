@@ -14,6 +14,7 @@ import styles from "./styles";
 export default function HomeScreen({ navigation }) {
   return (
     <View>
+      <StatusBar></StatusBar>
       <Text>HOME SCREEN</Text>
     </View>
   );

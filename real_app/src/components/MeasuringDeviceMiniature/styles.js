@@ -19,10 +19,16 @@ const styles = StyleSheet.create({
   imageContainer: {
     flex: 1,
     height: 130,
+    overflow: "hidden",
+    borderRadius: 30,
   },
   deviceImage: {
     flex: 1,
     resizeMode: "contain",
+    // overflow: "hidden",
+    // height: 100,
+    // width: 100,
+    // borderRadius: 9,
   },
   briefInfo: {
     flex: 1,
