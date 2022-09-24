@@ -14,35 +14,35 @@ export default function MeasuringDeviceScreen({ navigation }) {
   const [devices, setDevices] = useState([
     {
       deviceName: "Device1",
-      powerConsumption: 2,
+      powerProduction: 2,
       image: "../../../assets/as-unit.webp",
       status: "On",
       key: "1",
     },
     {
       deviceName: "Device2",
-      powerConsumption: 5,
+      powerProduction: 5,
       image: "../../../assets/as-unit.webp",
       status: "On",
       key: "2",
     },
     {
-      deviceName: "Device2",
-      powerConsumption: 5,
+      deviceName: "Device3",
+      powerProduction: 5,
       image: "../../../assets/as-unit.webp",
       status: "Off",
       key: "3",
     },
     {
-      deviceName: "Device2",
-      powerConsumption: 5,
+      deviceName: "Device4",
+      powerProduction: 5,
       image: "../../../assets/as-unit.webp",
       status: "Off",
       key: "4",
     },
     {
-      deviceName: "Device2",
-      powerConsumption: 5,
+      deviceName: "Device5",
+      powerProduction: 5,
       image: "../../../assets/as-unit.webp",
       status: "On",
       key: "5",
@@ -69,11 +69,13 @@ export default function MeasuringDeviceScreen({ navigation }) {
           data={devices}
           renderItem={({ item }) => (
             <TouchableOpacity
-              onPress={() => navigation.navigate("MeasuringDevice", item)}
+              onPress={() => {
+                navigation.navigate("MeasuringDevice", item);
+              }}
             >
               {/* <View style={{ backgroundColor: "red" }}> */}
               <MeasuringDeviceMiniature
-                powerConsumption={item.powerConsumption}
+                powerProduction={item.powerProduction}
                 deviceStatus={item.status}
                 style={{ flex: 1 }}
               ></MeasuringDeviceMiniature>

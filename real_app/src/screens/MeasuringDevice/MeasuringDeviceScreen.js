@@ -4,7 +4,9 @@ import styles from "./styles.js";
 
 //the whole device info view should be substituted by a custom component
 
-export default function MeasuringDeviceScreen() {
+export default function MeasuringDeviceScreen({ route, navigation }) {
+  const { deviceName, powerProduction, image, status, key } = route.params;
+
   return (
     <View style={styles.container}>
       <StatusBar></StatusBar>
@@ -21,11 +23,11 @@ export default function MeasuringDeviceScreen() {
       </View>
       <View style={styles.deviceInfo}>
         <View style={styles.infoColumn}>
-          <Text>Name: Measuring1</Text>
-          <Text>Status: On</Text>
+          <Text>Name: {deviceName}</Text>
+          <Text>Status: {status}</Text>
         </View>
         <View style={styles.infoColumn}>
-          <Text>Production: 20</Text>
+          <Text>Production: {powerProduction}</Text>
           <Text>Time on: 13,5h</Text>
         </View>
       </View>

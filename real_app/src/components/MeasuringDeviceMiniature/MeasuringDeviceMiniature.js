@@ -7,7 +7,7 @@ import { Text, View, Image } from "react-native";
 import styles from "./styles";
 
 export default function MeasuringDeviceMiniature({
-  powerConsumption,
+  powerProduction,
   deviceStatus,
 }) {
   return (
@@ -24,7 +24,7 @@ export default function MeasuringDeviceMiniature({
             <Text>Status: {deviceStatus}</Text>
           </View>
           <View>
-            <Text>Power consum: {powerConsumption}</Text>
+            <Text>Power consum: {powerProduction}</Text>
           </View>
         </View>
       </View>
