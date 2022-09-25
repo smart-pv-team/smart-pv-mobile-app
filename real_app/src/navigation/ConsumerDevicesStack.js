@@ -1,7 +1,8 @@
 import { createStackNavigator } from "@react-navigation/stack";
 import ConsumerDevicesScreen from "../screens/ConsumerDevices/ConsumerDevicesScreen";
 import ConsumerDeviceScreen from "../screens/ConsumerDevice/ConsumerDeviceScreen";
-import Header from "../components/Header/Header";
+import DrawerHeader from "../components/DrawerHeader/DrawerHeader";
+import StackHeader from "../components/StackHeader/StackHeader";
 import React from "react";
 
 const Stack = createStackNavigator();
@@ -9,26 +10,25 @@ const Stack = createStackNavigator();
 export default function ConsumerDevicesStack() {
   return (
     <Stack.Navigator>
-      <Stack.Screen name="Consumer Devices" component={ConsumerDevicesScreen} />
+      <Stack.Screen
+        name="ConsumerDevicesScreen"
+        component={ConsumerDevicesScreen}
+        options={{
+          header: ({ navigation }) => (
+            <DrawerHeader navigation={navigation} name="Consumer Devices" />
+          ),
+        }}
+      />
+      <Stack.Screen
+        name="ConsumerDevice"
+        options={{
+          header: ({ navigation }) => (
+            <StackHeader navigation={navigation} name="Consumer Device" />
+          ),
+        }}
+      >
+        {(props) => <ConsumerDeviceScreen {...props} />}
+      </Stack.Screen>
     </Stack.Navigator>
   );
 }
-// const screens = {
-//   ConsumerDevices: {
-//     screen: ConsumerDevicesScreen,
-//     navigationOptions: ({ navigation }) => {
-//       return {
-//         headerTitle: () => (
-// <Header navigation={navigation} title="Consumer devices" />
-//         ),
-//       };
-//     },
-//   },
-//   ConsumerDevice: {
-//     screen: ConsumerDeviceScreen,
-//   },
-// };
-
-// const ConsumerDevicesStack = createStackNavigator(screens);
-
-// export default ConsumerDevicesStack;

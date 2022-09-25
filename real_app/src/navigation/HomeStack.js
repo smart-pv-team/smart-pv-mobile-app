@@ -3,7 +3,7 @@ import HomeScreen from "../screens/Home/HomeScreen";
 import MeasuringDevicesScreen from "../screens/MeasuringDevices/MeasuringDevicesScreen";
 import MeasuringDeviceScreen from "../screens/MeasuringDevice/MeasuringDeviceScreen";
 import ConsumerDevicesScreen from "../screens/ConsumerDevices/ConsumerDevicesScreen";
-import Header from "../components/Header/Header";
+import DrawerHeader from "../components/DrawerHeader/DrawerHeader";
 import React from "react";
 
 const Stack = createStackNavigator();
@@ -11,7 +11,15 @@ const Stack = createStackNavigator();
 export default function HomeStack() {
   return (
     <Stack.Navigator>
-      <Stack.Screen name="Home" component={HomeScreen} />
+      <Stack.Screen
+        name="HomeScreen"
+        component={HomeScreen}
+        options={{
+          header: ({ navigation }) => (
+            <DrawerHeader navigation={navigation} name="Home" />
+          ),
+        }}
+      />
     </Stack.Navigator>
   );
 }

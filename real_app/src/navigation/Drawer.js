@@ -1,78 +1,44 @@
 import { createDrawerNavigator } from "@react-navigation/drawer";
-import { createAppContainer } from "react-navigation";
-import { View, Text } from "react-native";
 
 import HomeStack from "./HomeStack";
 import MeasuringDevicesStack from "./MeasuringDevicesStack";
 import ConsumerDevicesStack from "./ConsumerDevicesStack";
-import DrawerContent from "../components/DrawerContent/DrawerContent";
-import HomeScreen from "../screens/Home/HomeScreen";
-import Header from "../components/Header/Header";
-import MeasuringDevicesScreen from "../screens/MeasuringDevices/MeasuringDevicesScreen";
-
-// const RootDrawerNavigator = createDrawerNavigator({
-//   Home: {
-//     screen: HomeStack,
-//   },
-//   MeasuringDevices: {
-//     screen: MeasuringDevicesStack,
-//   },
-//   ConsumerDevices: {
-//     screen: ConsumerDevicesStack,
-//   },
-// });
-
-// export default createAppContainer(RootDrawerNavigator);
-
-// const Drawer = createDrawerNavigator({
-//   Home: {
-//     screen: HomeStack,
-//   },
-// });
-// export default createAppContainer(Drawer);
-
-// const Drawer = createAppContainer();
-
-// const MyDrawer = () => {
-//   return (
-//     <Drawer.Navigator screenOptions={{ headerShown: false }}>
-//       <Drawer.Screen name="Home" component={HomeScreen} />
-//     </Drawer.Navigator>
-//   );
-// };
-
-// export default MyDrawer;
+import CustomDrawerContent from "../components/DrawerContent/DrawerContent";
+import { MaterialIcons } from "@expo/vector-icons";
 
 const LeftDrawer = createDrawerNavigator();
 
 function LeftDrawerScreen() {
   return (
     <LeftDrawer.Navigator
+      drawerContent={(props) => <CustomDrawerContent {...props} />}
       id="LeftDrawer"
-      screenOptions={{ drawerPosition: "left" }}
+      screenOptions={{
+        drawerPosition: "left",
+        headerShown: false,
+        swipeEdgeWidth: 0,
+      }}
     >
       <LeftDrawer.Screen
         name="Home"
-        component={HomeScreen}
+        component={HomeStack}
         options={{
-          header: ({ navigation }) => (
-            <Header navigation={navigation} name="Home" />
-          ),
+          drawerIcon: () => <MaterialIcons name="home" size={30} />,
         }}
       />
       <LeftDrawer.Screen
-        name="MeasuringDevices"
+        name="Measuring Devices"
         component={MeasuringDevicesStack}
         options={{
-          header: ({ navigation }) => (
-            <Header navigation={navigation} name="Measuring Devices" />
-          ),
-          // headerTitle: () => <Header name="MEASURING DEVICES" />,
+          drawerIcon: () => <MaterialIcons name="bolt" size={30} />,
         }}
       />
       <LeftDrawer.Screen
-        name="ConsumerDevices"
+        name="Consumer Devices"
         component={ConsumerDevicesStack}
+        options={{
+          drawerIcon: () => <MaterialIcons name="microwave" size={30} />,
+        }}
       />
     </LeftDrawer.Navigator>
   );

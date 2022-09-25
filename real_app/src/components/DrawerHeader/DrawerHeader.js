@@ -35,13 +35,13 @@ import { MaterialIcons } from "@expo/vector-icons";
 //   );
 // } //24.09
 
-function Header({ navigation, name }) {
+function DrawerHeader({ navigation, name }) {
   return (
     <View style={styles.header}>
       <Text style={styles.headerText}>{name}</Text>
       <MaterialIcons
         name="menu"
-        size={28}
+        size={32}
         onPress={() => navigation.getParent("LeftDrawer").openDrawer()}
         style={styles.icon}
       />
@@ -49,4 +49,4 @@ function Header({ navigation, name }) {
   );
 }
 
-export default Header;
+export default DrawerHeader;

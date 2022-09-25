@@ -2,7 +2,8 @@ import { createStackNavigator } from "@react-navigation/stack";
 import { createAppContainer } from "react-navigation";
 import MeasuringDevicesScreen from "../screens/MeasuringDevices/MeasuringDevicesScreen";
 import MeasuringDeviceScreen from "../screens/MeasuringDevice/MeasuringDeviceScreen";
-import Header from "../components/Header/Header";
+import DrawerHeader from "../components/DrawerHeader/DrawerHeader";
+import StackHeader from "../components/StackHeader/StackHeader";
 
 const Stack = createStackNavigator();
 
@@ -10,32 +11,24 @@ export default function MeasuringDevicesStack() {
   return (
     <Stack.Navigator>
       <Stack.Screen
-        name="MeasuringDevices"
+        name="MeasuringDevicesScreen"
         component={MeasuringDevicesScreen}
-        options={{ headerShown: false }}
+        options={{
+          header: ({ navigation }) => (
+            <DrawerHeader navigation={navigation} name="Measuring Devices" />
+          ),
+        }}
       />
-      <Stack.Screen name="MeasuringDevice">
+      <Stack.Screen
+        name="MeasuringDevice"
+        options={{
+          header: ({ navigation }) => (
+            <StackHeader navigation={navigation} name="Measuring Device" />
+          ),
+        }}
+      >
         {(props) => <MeasuringDeviceScreen {...props} />}
       </Stack.Screen>
     </Stack.Navigator>
   );
 }
-// const screens = {
-//   MeasuringDevices: {
-//     screen: MeasuringDevicesScreen,
-//     navigationOptions: ({ navigation }) => {
-//       return {
-//         headerTitle: () => (
-//           <Header navigation={navigation} title="Measuring devices" />
-//         ),
-//       };
-//     },
-//   },
-//   MeasuringDevice: {
-//     screen: MeasuringDeviceScreen,
-//   },
-// };
-
-// const MeasuringDevicesStack = createStackNavigator(screens);
-
-// export default MeasuringDevicesStack;
