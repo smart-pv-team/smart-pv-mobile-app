@@ -12,14 +12,7 @@ import styles from "./styles";
 export default function CustomDrawerContent(props) {
   return (
     <View style={{ flex: 1 }}>
-      <View
-        style={{
-          alignItems: "center",
-          paddingBottom: 20,
-          paddingTop: 10,
-          backgroundColor: "#EBF8FF",
-        }}
-      >
+      <View style={styles.profile}>
         <Image
           source={require("../../../assets/ac-unit.webp")}
           style={{
@@ -30,6 +23,7 @@ export default function CustomDrawerContent(props) {
             borderColor: "black",
           }}
         />
+        <Text style={styles.profileText}>Admin</Text>
       </View>
       <DrawerContentScrollView {...props}>
         <DrawerItemList {...props} />
@@ -41,11 +35,10 @@ export default function CustomDrawerContent(props) {
             alignItems: "center",
             width: "100%",
             paddingLeft: 2,
-            // backgroundColor: "red",
           }}
         >
           <MaterialIcons name="settings" size={30} />
-          <Text style={styles.text}>Settings</Text>
+          <Text style={styles.settingText}>Settings</Text>
         </TouchableOpacity>
       </View>
     </View>

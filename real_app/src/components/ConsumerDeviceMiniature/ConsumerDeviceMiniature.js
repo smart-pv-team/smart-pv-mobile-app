@@ -1,12 +1,10 @@
-//A measuring devices screen will be a scrollable list of devices.
-//This list will consist of little block miniatures describing the device
-//briefly. When you touch the block you'll be transported into a specific
-//Measuring Device Screen.
-import React, { useState } from "react";
 import { Text, View, Image } from "react-native";
 import styles from "./styles";
 
-export default function MeasuringDeviceMiniature({ deviceName, deviceStatus }) {
+export default function ConsumerDeviceMiniature({
+  powerConsumption,
+  deviceStatus,
+}) {
   return (
     <View style={styles.spaceBetween}>
       <View style={styles.container}>
@@ -17,11 +15,11 @@ export default function MeasuringDeviceMiniature({ deviceName, deviceStatus }) {
           ></Image>
         </View>
         <View style={styles.briefInfo}>
-          <View>
-            <Text>Name: {deviceName}</Text>
-          </View>
           <View style={{}}>
             <Text>Status: {deviceStatus}</Text>
+          </View>
+          <View>
+            <Text>Power consum: {powerConsumption}</Text>
           </View>
         </View>
       </View>

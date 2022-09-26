@@ -49,17 +49,6 @@ export default function MeasuringDeviceScreen({ navigation }) {
     },
   ]);
 
-  const renderDevice = ({ item }) => {
-    <TouchableOpacity
-      onPress={() => navigation.navigate("MeasuringDevice", item)}
-    >
-      <View style={styles.miniatureContainer}>
-        <Image style={styles.deviceImage} source={{ uri: item.image }}></Image>
-        <Text>{item.deviceName}</Text>
-      </View>
-    </TouchableOpacity>;
-  };
-
   return (
     <View style={styles.container}>
       <StatusBar></StatusBar>
@@ -75,7 +64,7 @@ export default function MeasuringDeviceScreen({ navigation }) {
             >
               {/* <View style={{ backgroundColor: "red" }}> */}
               <MeasuringDeviceMiniature
-                powerProduction={item.powerProduction}
+                deviceName={item.deviceName}
                 deviceStatus={item.status}
                 style={{ flex: 1 }}
               ></MeasuringDeviceMiniature>

@@ -19,6 +19,7 @@ const styles = StyleSheet.create({
   imageContainer: {
     flex: 1,
     height: 130,
+    width: 100,
     overflow: "hidden",
     borderRadius: 30,
   },
@@ -33,6 +34,7 @@ const styles = StyleSheet.create({
   briefInfo: {
     flex: 1,
     flexDirection: "row",
+    // maxHeight: 100,
   },
 });
 

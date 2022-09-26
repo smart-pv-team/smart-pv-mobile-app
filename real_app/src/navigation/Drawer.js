@@ -17,6 +17,12 @@ function LeftDrawerScreen() {
         drawerPosition: "left",
         headerShown: false,
         swipeEdgeWidth: 0,
+        drawerStyle: {
+          width: 251,
+        },
+        drawerActiveBackgroundColor: "#F5F5F5",
+        drawerActiveTintColor: "black",
+        drawerInactiveTintColor: "#606060",
       }}
     >
       <LeftDrawer.Screen
