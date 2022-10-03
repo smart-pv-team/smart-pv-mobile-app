@@ -7,6 +7,7 @@ import {
   TouchableOpacity,
   Image,
 } from "react-native";
+import MeasuringDeviceMin from "../../components/MeasuringDeviceMin/MeasuringDeviceMin";
 import MeasuringDeviceMiniature from "../../components/MeasuringDeviceMiniature/MeasuringDeviceMiniature";
 import styles from "./styles";
 
@@ -14,37 +15,37 @@ export default function MeasuringDeviceScreen({ navigation }) {
   const [devices, setDevices] = useState([
     {
       deviceName: "Device1",
-      powerProduction: 2,
+      powerProduction: 23244,
       image: "../../../assets/as-unit.webp",
-      status: "On",
+      status: "on",
       key: "1",
     },
     {
       deviceName: "Device2",
-      powerProduction: 5,
+      powerProduction: 52303,
       image: "../../../assets/as-unit.webp",
-      status: "On",
+      status: "on",
       key: "2",
     },
     {
       deviceName: "Device3",
-      powerProduction: 5,
+      powerProduction: 52340,
       image: "../../../assets/as-unit.webp",
-      status: "Off",
+      status: "off",
       key: "3",
     },
     {
       deviceName: "Device4",
       powerProduction: 5,
       image: "../../../assets/as-unit.webp",
-      status: "Off",
+      status: "off",
       key: "4",
     },
     {
       deviceName: "Device5",
       powerProduction: 5,
       image: "../../../assets/as-unit.webp",
-      status: "On",
+      status: "on",
       key: "5",
     },
   ]);
@@ -58,16 +59,22 @@ export default function MeasuringDeviceScreen({ navigation }) {
           data={devices}
           renderItem={({ item }) => (
             <TouchableOpacity
+              style={{ paddingBottom: 7 }}
               onPress={() => {
                 navigation.navigate("MeasuringDevice", item);
               }}
             >
               {/* <View style={{ backgroundColor: "red" }}> */}
-              <MeasuringDeviceMiniature
+              {/* <MeasuringDeviceMiniature
                 deviceName={item.deviceName}
                 deviceStatus={item.status}
                 style={{ flex: 1 }}
-              ></MeasuringDeviceMiniature>
+              ></MeasuringDeviceMiniature> */}
+              <MeasuringDeviceMin
+                deviceName={item.deviceName}
+                deviceStatus={item.status}
+                production={item.powerProduction}
+              />
               {/* </View> */}
             </TouchableOpacity>
           )}

@@ -17,6 +17,7 @@ const styles = StyleSheet.create({
   devicesList: {
     flex: 1,
     marginHorizontal: 20,
+    width: "90%",
   },
 });
 
