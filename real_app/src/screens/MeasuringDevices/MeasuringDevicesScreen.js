@@ -22,7 +22,7 @@ export default function MeasuringDeviceScreen({ navigation }) {
     },
     {
       deviceName: "Device2",
-      powerProduction: 52303,
+      powerProduction: 52303.22,
       image: "../../../assets/as-unit.webp",
       status: "on",
       key: "2",
@@ -36,17 +36,24 @@ export default function MeasuringDeviceScreen({ navigation }) {
     },
     {
       deviceName: "Device4",
-      powerProduction: 5,
+      powerProduction: 24051.5,
       image: "../../../assets/as-unit.webp",
       status: "off",
       key: "4",
     },
     {
       deviceName: "Device5",
-      powerProduction: 5,
+      powerProduction: 34203.2,
       image: "../../../assets/as-unit.webp",
       status: "on",
       key: "5",
+    },
+    {
+      deviceName: "Device6",
+      powerProduction: 42359.3,
+      image: "../../../assets/as-unit.webp",
+      status: "on",
+      key: "6",
     },
   ]);
 
@@ -59,7 +66,7 @@ export default function MeasuringDeviceScreen({ navigation }) {
           data={devices}
           renderItem={({ item }) => (
             <TouchableOpacity
-              style={{ paddingBottom: 7 }}
+              style={{ paddingBottom: 17 }}
               onPress={() => {
                 navigation.navigate("MeasuringDevice", item);
               }}
