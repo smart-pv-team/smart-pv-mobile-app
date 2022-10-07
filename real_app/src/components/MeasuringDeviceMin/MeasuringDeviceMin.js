@@ -14,7 +14,7 @@ export default function MeasuringDeviceMin({
   };
 
   return (
-    <View style={styles.container}>
+    <View style={[styles.container, { overflow: "hidden" }]}>
       <View style={[styles.minorContainer]}>
         <Image
           style={styles.deviceIcon}
@@ -44,7 +44,7 @@ export default function MeasuringDeviceMin({
           styles.minorContainer,
           {
             flex: 0.7,
-            // backgroundColor: "#4CAF50",
+            backgroundColor: "#4CAF50",
           },
         ]}
       >
