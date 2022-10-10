@@ -10,7 +10,7 @@ const styles = StyleSheet.create({
     flexDirection: "column",
     borderRadius: 9,
     borderColor: "#333",
-    borderWidth: 1,
+    borderWidth: 1.5,
   },
   deviceInfo: {
     flex: 1,
@@ -21,6 +21,7 @@ const styles = StyleSheet.create({
     height: 45,
     alignItems: "center",
     backgroundColor: "#78B460",
+    // backgroundColor: "#93A661",
     width: "100%",
   },
   status: {

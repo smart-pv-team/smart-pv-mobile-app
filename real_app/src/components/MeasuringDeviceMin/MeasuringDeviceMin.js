@@ -44,7 +44,7 @@ export default function MeasuringDeviceMin({
           styles.minorContainer,
           {
             flex: 0.7,
-            backgroundColor: "#4CAF50",
+            backgroundColor: "#78B460",
           },
         ]}
       >

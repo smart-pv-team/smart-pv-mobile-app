@@ -9,19 +9,30 @@ export default function ConsumerDeviceScreen({ route, navigation }) {
   return (
     <View style={styles.container}>
       <StatusBar />
-      <View style={{ flex: 2 }}>
+      {/* <View style={{ flex: 1 }}>
         <Image
           style={styles.deviceImage}
           source={require("../../../assets/ac-unit.webp")}
         />
-      </View>
+      </View> */}
+      {/* <View style={{ flex: 2 }}> */}
+
+      <Image
+        style={styles.deviceImage}
+        source={require("../../../assets/ac-unit.webp")}
+      />
+
       <View style={styles.graph}>
         <Text>Place for graph</Text>
       </View>
-      <View>
-        <Text>
-          {deviceName} {deviceStatus}
-        </Text>
+      <View style={{ flex: 2, width: "100%" }}>
+        <View style={{ flex: 1, padding: 5 }}>
+          <View style={styles.deviceInfo}>
+            <Text>
+              {deviceName} {deviceStatus}
+            </Text>
+          </View>
+        </View>
       </View>
     </View>
   );

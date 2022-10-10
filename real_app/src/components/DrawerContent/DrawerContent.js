@@ -15,13 +15,7 @@ export default function CustomDrawerContent(props) {
       <View style={styles.profile}>
         <Image
           source={require("../../../assets/ac-unit.webp")}
-          style={{
-            width: 150,
-            height: 150,
-            borderRadius: 150 / 2,
-            borderWidth: 1,
-            borderColor: "black",
-          }}
+          style={styles.profileImage}
         />
         <Text style={styles.profileText}>Admin</Text>
       </View>

@@ -59,7 +59,7 @@ export default function MeasuringDeviceScreen({ navigation }) {
 
   return (
     <View style={styles.container}>
-      <StatusBar></StatusBar>
+      <View style={{ height: 6 }} />
       <View style={styles.devicesList}>
         <FlatList
           showsVerticalScrollIndicator={false}

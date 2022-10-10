@@ -7,9 +7,11 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "center",
-    borderBottomColor: "#b3b3b3",
-    borderRadius: 1,
-    borderBottomWidth: 1,
+    borderBottomWidth: 1.5,
+    borderTopLeftRadius: 0,
+    borderTopRightRadius: 0,
+    backgroundColor: "#93A661",
+    backgroundColor: "#78B460",
   },
   headerText: {
     fontSize: 23,
@@ -17,10 +19,12 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignContent: "center",
     alignItems: "center",
+    // color: "white",
   },
   icon: {
     position: "absolute",
     left: 20,
+    // color: "white",
   },
 });
 

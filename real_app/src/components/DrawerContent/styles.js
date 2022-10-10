@@ -5,7 +5,16 @@ const styles = StyleSheet.create({
     alignItems: "center",
     paddingBottom: 12,
     paddingTop: 10,
-    backgroundColor: "#EBF8FF",
+    // backgroundColor: "#EBF8FF",
+    // backgroundColor: "#93A661",
+    backgroundColor: "#78B460",
+  },
+  profileImage: {
+    width: 150,
+    height: 150,
+    borderRadius: 150 / 2,
+    borderWidth: 1.5,
+    borderColor: "black",
   },
   profileText: {
     fontSize: 15,

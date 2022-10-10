@@ -107,8 +107,7 @@ export default function ConsumerDevicesScreen({ navigation }) {
 
   return (
     <View style={{ flex: 1 }}>
-      {/* <View style={{flex: 1}}> */}
-
+      <View style={{ height: 6 }} />
       <FlatList
         data={devices}
         numColumns={2}
@@ -128,10 +127,6 @@ export default function ConsumerDevicesScreen({ navigation }) {
           </TouchableOpacity>
         )}
       />
-      {/* </View> */}
-      {/* <View
-        style={{ flex: 1, width: "50%", height: 100, backgroundColor: "red" }}
-      /> */}
     </View>
   );
 }
