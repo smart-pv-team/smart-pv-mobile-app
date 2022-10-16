@@ -4,12 +4,18 @@ import { registerRootComponent } from "expo";
 import { NavigationContainer } from "@react-navigation/native";
 import Navigator from "./src/navigation/Drawer";
 
+import LoginScreen from "./src/screens/Login/LoginScreen";
+
+// export default function App() {
+//   return (
+//     <NavigationContainer>
+//       <Navigator />
+//     </NavigationContainer>
+//   );
+// }
+
 export default function App() {
-  return (
-    <NavigationContainer>
-      <Navigator />
-    </NavigationContainer>
-  );
+  return <LoginScreen></LoginScreen>;
 }
 
 registerRootComponent(App);

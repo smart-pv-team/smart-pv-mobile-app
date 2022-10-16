@@ -6,12 +6,39 @@ import {
   FlatList,
   TouchableOpacity,
   Image,
+  Button,
 } from "react-native";
 import ConsumerDeviceMin from "../../components/ConsumerDeviceMin/ConsumerDeviceMin";
 import ConsumerDeviceMiniature from "../../components/ConsumerDeviceMiniature/ConsumerDeviceMiniature";
 import styles from "./styles";
 
 export default function ConsumerDevicesScreen({ navigation }) {
+  const [asyncDevices, setAsyncDevices] = useState();
+
+  // const promisedSetAsyncDevices = (state) =>
+  //   new Promise(() => setAsyncDevices(state));
+  const asyncSetDevices = async (state) => {
+    setAsyncDevices(state);
+  };
+
+  const getDevices = async () => {
+    const res = await fetch(
+      "http://192.168.9.75:8080/smartpv/consumption/devices",
+      {
+        method: "GET",
+        headers: {
+          Accept: "application/json",
+          "Content-Type": "application/json",
+        },
+      }
+    );
+    const data = await res.json();
+
+    // setAsyncDevices(data);
+    // await promisedSetAsyncDevices(data);
+    asyncSetDevices(data).then(console.log(asyncDevices));
+    // console.log(asyncDevices);
+  };
   const [devices, setDevices] = useState([
     {
       deviceName: "Air conditioner",
@@ -108,6 +135,7 @@ export default function ConsumerDevicesScreen({ navigation }) {
   return (
     <View style={{ flex: 1 }}>
       <View style={{ height: 6 }} />
+      <Button onPress={getDevices} title="lala" />
       <FlatList
         data={devices}
         numColumns={2}
