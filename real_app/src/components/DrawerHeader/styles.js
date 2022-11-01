@@ -1,4 +1,5 @@
 import { StyleSheet } from "react-native";
+import AppStyles from "../../AppStyles";
 
 const styles = StyleSheet.create({
   header: {
@@ -7,15 +8,15 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "center",
-    borderBottomWidth: 1.5,
+    borderBottomWidth: 1,
     borderTopLeftRadius: 0,
     borderTopRightRadius: 0,
     backgroundColor: "#93A661",
-    backgroundColor: "#78B460",
+    backgroundColor: AppStyles.color.primaryColor,
   },
   headerText: {
     fontSize: 23,
-    fontFamily: "sans-serif-condensed",
+    // fontFamily: "sans-serif-condensed",
     justifyContent: "center",
     alignContent: "center",
     alignItems: "center",

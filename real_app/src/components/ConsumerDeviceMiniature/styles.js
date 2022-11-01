@@ -1,4 +1,5 @@
 import { StyleSheet } from "react-native";
+import AppStyles from "../../AppStyles";
 
 const styles = StyleSheet.create({
   spaceBetween: {
@@ -11,7 +12,6 @@ const styles = StyleSheet.create({
     flexDirection: "column",
     paddingTop: 0,
     padding: 10,
-    // backgroundColor: "#888",
     borderRadius: 9,
     borderColor: "#333",
     borderWidth: 1,

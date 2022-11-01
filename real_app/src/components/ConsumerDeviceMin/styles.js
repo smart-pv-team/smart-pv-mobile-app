@@ -1,4 +1,5 @@
 import { StyleSheet } from "react-native";
+import AppStyles from "../../AppStyles";
 
 const styles = StyleSheet.create({
   container: {
@@ -11,6 +12,7 @@ const styles = StyleSheet.create({
     borderRadius: 9,
     borderColor: "#333",
     borderWidth: 1.5,
+    backgroundColor: AppStyles.color.secondaryColor,
   },
   deviceInfo: {
     flex: 1,
@@ -20,7 +22,7 @@ const styles = StyleSheet.create({
   minorContainer: {
     height: 45,
     alignItems: "center",
-    backgroundColor: "#78B460",
+    backgroundColor: AppStyles.color.primaryColor,
     // backgroundColor: "#93A661",
     width: "100%",
   },

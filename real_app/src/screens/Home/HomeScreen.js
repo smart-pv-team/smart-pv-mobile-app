@@ -13,9 +13,13 @@ import styles from "./styles";
 
 export default function HomeScreen({ navigation }) {
   return (
-    <View>
+    <View style={{ flex: 1 }}>
       <StatusBar></StatusBar>
-      <Text>HOME SCREEN</Text>
+      <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
+        <View>
+          <Text>HOME SCREEN</Text>
+        </View>
+      </View>
     </View>
   );
 }

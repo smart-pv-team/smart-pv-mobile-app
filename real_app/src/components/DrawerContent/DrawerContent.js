@@ -8,6 +8,7 @@ import { MaterialIcons } from "@expo/vector-icons";
 import { TouchableOpacity } from "react-native-gesture-handler";
 
 import styles from "./styles";
+import AppStyles from "../../AppStyles";
 
 export default function CustomDrawerContent(props) {
   return (
@@ -19,7 +20,10 @@ export default function CustomDrawerContent(props) {
         />
         <Text style={styles.profileText}>Admin</Text>
       </View>
-      <DrawerContentScrollView {...props}>
+      <DrawerContentScrollView
+        {...props}
+        style={{ backgroundColor: AppStyles.color.secondaryColor }}
+      >
         <DrawerItemList {...props} />
       </DrawerContentScrollView>
       <View style={styles.settingsLabel}>

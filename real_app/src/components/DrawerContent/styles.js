@@ -1,4 +1,5 @@
 import { StyleSheet } from "react-native";
+import AppStyles from "../../AppStyles";
 
 const styles = StyleSheet.create({
   profile: {
@@ -7,7 +8,7 @@ const styles = StyleSheet.create({
     paddingTop: 10,
     // backgroundColor: "#EBF8FF",
     // backgroundColor: "#93A661",
-    backgroundColor: "#78B460",
+    backgroundColor: AppStyles.color.primaryColor,
   },
   profileImage: {
     width: 150,

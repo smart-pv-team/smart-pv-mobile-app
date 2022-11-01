@@ -1,4 +1,5 @@
 import { StyleSheet } from "react-native";
+import AppStyles from "../../AppStyles";
 
 const styles = StyleSheet.create({
   container: {
@@ -35,7 +36,7 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     marginTop: 40,
     // backgroundColor: "#FF1493",
-    backgroundColor: "#78B460",
+    backgroundColor: AppStyles.color.primaryColor,
   },
 });
 

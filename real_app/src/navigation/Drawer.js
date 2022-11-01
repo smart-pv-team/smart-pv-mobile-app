@@ -20,9 +20,11 @@ function LeftDrawerScreen() {
         drawerStyle: {
           width: 251,
         },
-        drawerActiveBackgroundColor: "#F5F5F5",
+        // drawerActiveBackgroundColor: "#F5F5F5",
+        drawerActiveBackgroundColor: "#FFE4AE",
         drawerActiveTintColor: "black",
         drawerInactiveTintColor: "#606060",
+        // drawerInactiveBackgroundColor: "black",
       }}
     >
       <LeftDrawer.Screen

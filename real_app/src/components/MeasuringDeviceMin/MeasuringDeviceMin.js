@@ -1,4 +1,5 @@
 import { View, Image, Text } from "react-native";
+import AppStyles from "../../AppStyles";
 import styles from "./styles";
 
 export default function MeasuringDeviceMin({
@@ -44,7 +45,7 @@ export default function MeasuringDeviceMin({
           styles.minorContainer,
           {
             flex: 0.7,
-            backgroundColor: "#78B460",
+            backgroundColor: AppStyles.color.primaryColor,
           },
         ]}
       >

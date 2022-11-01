@@ -6,16 +6,16 @@ import Navigator from "./src/navigation/Drawer";
 
 import LoginScreen from "./src/screens/Login/LoginScreen";
 
-// export default function App() {
-//   return (
-//     <NavigationContainer>
-//       <Navigator />
-//     </NavigationContainer>
-//   );
-// }
-
 export default function App() {
-  return <LoginScreen></LoginScreen>;
+  return (
+    <NavigationContainer>
+      <Navigator />
+    </NavigationContainer>
+  );
 }
+
+// export default function App() {
+//   return <LoginScreen></LoginScreen>;
+// }
 
 registerRootComponent(App);

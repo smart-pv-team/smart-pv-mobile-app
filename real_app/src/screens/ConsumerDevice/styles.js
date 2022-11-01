@@ -1,4 +1,6 @@
 import { StyleSheet } from "react-native";
+import AppStyles from "../../AppStyles";
+import { Dimensions } from "react-native";
 
 const styles = StyleSheet.create({
   container: { flex: 1, alignItems: "center" },
@@ -14,17 +16,45 @@ const styles = StyleSheet.create({
   graph: {
     flex: 1,
     width: "100%",
-    backgroundColor: "lightblue",
+    // backgroundColor: "lightblue",
+    // justifyContent: "center",
+    alignItems: "center",
+  },
+  buttons: {
+    flexDirection: "row",
+    width: "97%",
+    // backgroundColor: "red",
+    justifyContent: "center",
+    paddingTop: 4,
+  },
+  button: {
+    // width: Dimensions.get("screen").width / 3 - 3,
+    height: 40,
+    width: "100%",
     justifyContent: "center",
     alignItems: "center",
+    borderWidth: 1,
   },
   deviceInfo: {
     flex: 1,
-    flexDirection: "row",
+    flexDirection: "column",
     width: "100%",
-    padding: 20,
+    paddingTop: 4,
     borderColor: "#555",
-    borderWidth: 2,
+    borderWidth: 1,
+    borderRadius: 9,
+    overflow: "hidden",
+  },
+  deviceName: {
+    alignItems: "center",
+    flex: 1,
+  },
+  cell: {
+    flex: 1,
+    alignItems: "center",
+    justifyContent: "center",
+    borderTopWidth: 1,
+    borderRightWidth: 1,
   },
 });
 
