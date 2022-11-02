@@ -11,12 +11,64 @@ import {
 import { LineChart } from "react-native-chart-kit";
 import { ScrollView } from "react-native-gesture-handler";
 import { TouchableOpacity } from "react-native-gesture-handler";
+import {
+  Chart,
+  VerticalAxis,
+  HorizontalAxis,
+  Line,
+  Area,
+} from "react-native-responsive-linechart";
 import AppStyles from "../../AppStyles";
 import styles from "./styles";
 
 export default function ConsumerDeviceScreen({ route, navigation }) {
+  const data1 = [
+    { x: -2, y: 1 },
+    { x: -2, y: 0 },
+    { x: -1, y: 0 },
+    { x: 3, y: 0 },
+    { x: 3, y: 1 },
+    { x: 8, y: 1 },
+    { x: 8, y: 0 },
+    { x: 9, y: 0 },
+    { x: 9, y: 1 },
+    { x: 10, y: 1 },
+  ];
+
+  // const [data2, setData2] = useState([
+  //   { x: -2, y: 4 },
+  //   { x: -1, y: 0 },
+  //   { x: 0, y: 1 },
+  //   { x: 1, y: 7 },
+  //   { x: 8, y: 10 },
+  //   { x: 9, y: 9.5 },
+  //   { x: 10, y: 8 },
+  // ]);
+
+  // const data2 = [
+  //   { x: -2, y: 4 },
+  //   { x: -1, y: 10 },
+  //   { x: 0, y: 1 },
+  //   { x: 1, y: 7 },
+  //   { x: 8, y: 10 },
+  //   { x: 9, y: 9.5 },
+  //   { x: 10, y: 8 },
+  // ];
+
   const { deviceName, powerConsumption, image, deviceStatus, key } =
     route.params;
+
+  // const change = () => {
+  //   setData2([
+  //     { x: -2, y: 1 },
+  //     { x: -1, y: 0 },
+  //     { x: 0, y: 0 },
+  //     { x: 1, y: 1 },
+  //     { x: 8, y: 0 },
+  //     { x: 9, y: 1 },
+  //     { x: 10, y: 1 },
+  //   ]);
+  // };
 
   const [labels, setLabels] = useState([
     "January",
@@ -68,48 +120,63 @@ export default function ConsumerDeviceScreen({ route, navigation }) {
     }
   };
 
+  const yLabels = ["OFF", "ON"];
+
   return (
     <View style={styles.container}>
       <StatusBar />
       <View style={styles.graph}>
-        <LineChart
-          data={{
-            labels: labels,
-            datasets: [
-              {
-                data: data,
+        <Chart
+          viewport={{ size: { width: 10 } }}
+          style={{ height: 260, width: "100%", backgroundColor: "#eee" }}
+          xDomain={{ min: -2, max: 10 }}
+          yDomain={{ min: -0.05, max: 1.05 }}
+          xLabels={"jan"}
+          yLabels={["OFF", "ON"]}
+          padding={{ left: 25, top: 10, bottom: 30, right: 20 }}
+        >
+          <VerticalAxis
+            // tickCount={2}
+            tickValues={[0, 1]}
+            theme={{
+              labels: {
+                // label: { rotation: -20 },
+                label: { fontSize: 8, fontWeight: "500" },
+                formatter: (v) => yLabels[v],
               },
-            ],
-          }}
-          fromZero={true}
-          width={Dimensions.get("window").width} // from react-native
-          height={260}
-          // yAxisLabel="$"
-          yAxisSuffix="kWh"
-          yAxisInterval={1} // optional, defaults to 1
-          chartConfig={{
-            // backgroundColor: "#e26a00",
-            backgroundGradientFrom: AppStyles.color.secondaryColor,
-            backgroundGradientTo: AppStyles.color.secondaryColor,
-            decimalPlaces: 2, // optional, defaults to 2dp
-            color: (opacity = 1) => `rgba(100, 255, 100, ${opacity})`,
-            labelColor: (opacity = 1) => `rgba(0, 0, 0, ${opacity})`,
-            style: {
-              borderRadius: 16,
-            },
-            propsForDots: {
-              r: "6",
-              strokeWidth: "2",
-              stroke: "#ffa726",
-            },
-          }}
-          bezier
-          style={{
-            marginTop: 0,
-            marginVertical: 8,
-            borderBottomWidth: 0.5,
-          }}
-        />
+            }}
+          />
+          <HorizontalAxis
+            tickCount={3}
+            theme={{
+              axis: { stroke: { color: "#aaa", width: 2 } },
+              ticks: { stroke: { color: "#aaa", width: 2 } },
+              labels: {
+                label: { rotation: 50 },
+                formatter: (v) => v.toFixed(1),
+              },
+            }}
+          />
+          <Area
+            theme={{
+              gradient: {
+                from: { color: "red", opacity: 0.1 },
+                to: { color: "red", opacity: 0.1 },
+              },
+            }}
+            data={data1}
+          />
+          <Line
+            data={data1}
+            smoothing="none"
+            theme={{ stroke: { color: "red", width: 1 } }}
+          />
+          {/* <Line
+            data={data2}
+            smoothing="cubic-spline"
+            theme={{ stroke: { color: "blue", width: 1 } }}
+          /> */}
+        </Chart>
         <View style={styles.buttons}>
           <View style={{ flex: 1 }}>
             <TouchableOpacity
@@ -124,7 +191,7 @@ export default function ConsumerDeviceScreen({ route, navigation }) {
               ]}
               onPress={() => updateButtonStyle(0)}
             >
-              <Text style={oneWeekStyle}>1 WEEK</Text>
+              <Text style={oneWeekStyle}>1 DAY</Text>
             </TouchableOpacity>
           </View>
           <View style={{ flex: 1 }}>
@@ -132,7 +199,7 @@ export default function ConsumerDeviceScreen({ route, navigation }) {
               style={[styles.button, oneMonthBorder]}
               onPress={() => updateButtonStyle(1)}
             >
-              <Text style={oneMonthStyle}>1 MONTH</Text>
+              <Text style={oneMonthStyle}>1 WEEK</Text>
             </TouchableOpacity>
           </View>
           <View style={{ flex: 1 }}>
@@ -148,7 +215,7 @@ export default function ConsumerDeviceScreen({ route, navigation }) {
               ]}
               onPress={() => updateButtonStyle(2)}
             >
-              <Text style={threeMonthsStyle}>3 MONTHS</Text>
+              <Text style={threeMonthsStyle}>1 MONTH</Text>
             </TouchableOpacity>
           </View>
         </View>
