@@ -5,12 +5,19 @@ import MeasuringDeviceScreen from "../screens/MeasuringDevice/MeasuringDeviceScr
 import ConsumerDevicesScreen from "../screens/ConsumerDevices/ConsumerDevicesScreen";
 import DrawerHeader from "../components/DrawerHeader/DrawerHeader";
 import React from "react";
+import AppStyles from "../AppStyles";
 
 const Stack = createStackNavigator();
 
 export default function HomeStack() {
   return (
-    <Stack.Navigator>
+    <Stack.Navigator
+      screenOptions={{
+        cardStyle: {
+          backgroundColor: AppStyles.color.backgroundColor,
+        },
+      }}
+    >
       <Stack.Screen
         name="HomeScreen"
         component={HomeScreen}

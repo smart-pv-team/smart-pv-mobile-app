@@ -85,6 +85,7 @@ export default function MeasuringDeviceScreen({ navigation }) {
               {/* </View> */}
             </TouchableOpacity>
           )}
+          overScrollMode={"never"}
         />
       </View>
     </View>

@@ -7,7 +7,7 @@ const AppStyles = StyleSheet.create({
     primaryColor: "#7EBDC2",
     secondaryColor: "#FEFAE0",
     tertiaryColor: "",
-    backgroundColor: "gray",
+    backgroundColor: "#F8F8F8",
     // primaryColorLighter: "#E2FAFC",
     primaryColorLighter: "#B4D7DA",
     secondaryColorLighter: "#FFFEF7",

@@ -16,7 +16,7 @@ function LeftDrawerScreen() {
       screenOptions={{
         drawerPosition: "left",
         headerShown: false,
-        swipeEdgeWidth: 0,
+        swipeEdgeWidth: 30,
         drawerStyle: {
           width: 251,
         },

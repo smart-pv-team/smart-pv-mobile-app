@@ -4,6 +4,7 @@ import ConsumerDeviceScreen from "../screens/ConsumerDevice/ConsumerDeviceScreen
 import DrawerHeader from "../components/DrawerHeader/DrawerHeader";
 import StackHeader from "../components/StackHeader/StackHeader";
 import React from "react";
+import AppStyles from "../AppStyles";
 
 const Stack = createStackNavigator();
 
@@ -11,6 +12,11 @@ export default function ConsumerDevicesStack() {
   return (
     <Stack.Navigator>
       <Stack.Screen
+        screenOptions={{
+          cardStyle: {
+            backgroundColor: AppStyles.color.backgroundColor,
+          },
+        }}
         name="ConsumerDevicesScreen"
         component={ConsumerDevicesScreen}
         options={{

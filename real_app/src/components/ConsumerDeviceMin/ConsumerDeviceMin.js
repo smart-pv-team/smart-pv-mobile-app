@@ -7,7 +7,7 @@ export default function ConsumerDeviceMin({
   powerConsumption,
 }) {
   const renderStatus = () => {
-    if (deviceStatus == "off") {
+    if (!deviceStatus) {
       return <View style={[styles.status, { backgroundColor: "lightgray" }]} />;
     }
     return <View style={[styles.status, { backgroundColor: "#48DA16" }]} />;

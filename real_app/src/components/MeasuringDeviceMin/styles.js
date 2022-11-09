@@ -8,7 +8,7 @@ const styles = StyleSheet.create({
     height: 110,
     width: "100%",
     borderColor: "black",
-    borderWidth: 2,
+    borderWidth: 1.05,
     alignItems: "center",
     borderRadius: 9,
     backgroundColor: AppStyles.color.secondaryColor,
