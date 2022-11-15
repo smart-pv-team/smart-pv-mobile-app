@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   View,
   Text,
@@ -15,8 +15,9 @@ import AppStyles from "../../AppStyles";
 import styles from "./styles";
 
 export default function ConsumerDeviceScreen({ route, navigation }) {
-  const { deviceName, powerConsumption, image, deviceStatus, key } =
-    route.params;
+  const { name, measuredEnergy, ipAddress, farmId, id } = route.params;
+  const [latestMeasurement, setLatestMeasurement] = useState();
+  const [farmName, setFarmName] = useState();
 
   const [labels, setLabels] = useState([
     "January",
@@ -68,6 +69,39 @@ export default function ConsumerDeviceScreen({ route, navigation }) {
     }
   };
 
+  const getLatestMeasurement = async () => {
+    try {
+      const response = await fetch(
+        `https://smart-pv.herokuapp.com/measurement/devices/${id}/last`,
+        { method: "GET" }
+      );
+      const responseJson = await response.json();
+      setLatestMeasurement(responseJson.measurement);
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  const getFarmName = async () => {
+    try {
+      const response = await fetch(
+        `https://smart-pv.herokuapp.com/management/farms/${farmId}`,
+        { method: "GET" }
+      );
+      const responseJson = await response.json();
+      setLatestMeasurement(responseJson.measurement);
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  useEffect(() => {
+    getLatestMeasurement();
+    getFarmName();
+    var date = new Date().getTime();
+    console.log(date);
+  }, []);
+
   return (
     <View style={styles.container}>
       <StatusBar />
@@ -82,7 +116,7 @@ export default function ConsumerDeviceScreen({ route, navigation }) {
             ],
           }}
           fromZero={true}
-          width={Dimensions.get("window").width} // from react-native
+          width={Dimensions.get("window").width}
           height={260}
           // yAxisLabel="$"
           yAxisSuffix="kWh"
@@ -163,10 +197,8 @@ export default function ConsumerDeviceScreen({ route, navigation }) {
         >
           <View style={styles.deviceInfo}>
             <View style={styles.deviceName}>
-              <Text style={{ fontSize: 20, fontWeight: "500" }}>
-                {deviceName}
-              </Text>
-              <Text>NAZWA FARMY</Text>
+              <Text style={{ fontSize: 20, fontWeight: "500" }}>{name}</Text>
+              <Text>{farmName || ""}</Text>
             </View>
 
             <View style={{ flex: 4, flexDirection: "row" }}>
@@ -208,22 +240,6 @@ export default function ConsumerDeviceScreen({ route, navigation }) {
                     { backgroundColor: AppStyles.color.secondaryColor },
                   ]}
                 >
-                  <Text style={{ fontWeight: "600" }}>MIN HYSTERESIS</Text>
-                </View>
-                <View
-                  style={[
-                    styles.cell,
-                    { backgroundColor: AppStyles.color.primaryColor },
-                  ]}
-                >
-                  <Text style={{ fontWeight: "600" }}>MAX HYSTERESIS</Text>
-                </View>
-                <View
-                  style={[
-                    styles.cell,
-                    { backgroundColor: AppStyles.color.secondaryColor },
-                  ]}
-                >
                   <Text style={{ fontWeight: "600" }}>IP ADDRESS</Text>
                 </View>
               </View>
@@ -242,29 +258,7 @@ export default function ConsumerDeviceScreen({ route, navigation }) {
                     },
                   ]}
                 >
-                  <Text>{deviceStatus.toUpperCase()}</Text>
-                </View>
-                <View
-                  style={[
-                    styles.cell,
-                    {
-                      backgroundColor: AppStyles.color.secondaryColorLighter,
-                      borderRightWidth: 0,
-                    },
-                  ]}
-                >
-                  <Text>Freezing</Text>
-                </View>
-                <View
-                  style={[
-                    styles.cell,
-                    {
-                      backgroundColor: AppStyles.color.primaryColorLighter,
-                      borderRightWidth: 0,
-                    },
-                  ]}
-                >
-                  <Text>{powerConsumption} kWh</Text>
+                  <Text>{latestMeasurement || ""}</Text>
                 </View>
                 <View
                   style={[
@@ -297,7 +291,7 @@ export default function ConsumerDeviceScreen({ route, navigation }) {
                     },
                   ]}
                 >
-                  <Text>255.255.255.255</Text>
+                  <Text>{ipAddress}</Text>
                 </View>
               </View>
             </View>

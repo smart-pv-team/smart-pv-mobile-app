@@ -25,7 +25,11 @@ export default function ConsumerDeviceMin({
           source={require("../../../assets/temporaryMeter.png")}
         ></Image>
         <View style={styles.deviceInfo}>
-          <Text style={{ fontSize: 15 }}>{deviceName}</Text>
+          <Text style={{ fontSize: 15, textAlign: "center" }}>
+            {deviceName.length > 30
+              ? deviceName.substr(0, 30) + "..."
+              : deviceName}
+          </Text>
           <Text style={{ fontSize: 20, paddingTop: 10 }}>
             {powerConsumption} kWh
           </Text>

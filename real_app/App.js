@@ -7,6 +7,7 @@ import Navigator from "./src/navigation/Drawer";
 import LoginScreen from "./src/screens/Login/LoginScreen";
 
 export default function App() {
+  global.a = "global value";
   return (
     <NavigationContainer>
       <Navigator />

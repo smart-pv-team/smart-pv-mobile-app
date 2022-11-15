@@ -1,4 +1,5 @@
 import { StyleSheet, Dimensions } from "react-native";
+import AppStyles from "../../AppStyles";
 
 const styles = StyleSheet.create({
   container: {
@@ -40,7 +41,7 @@ const styles = StyleSheet.create({
     height: 130,
     width: 130,
     borderRadius: 65,
-    borderColor: "blue",
+    borderColor: AppStyles.color.primaryColor,
     borderWidth: 5,
   },
   text: {},
@@ -57,6 +58,20 @@ const styles = StyleSheet.create({
   containerTitle: { height: "10%", paddingTop: 8 },
   infoContent: { flex: 1, width: "100%", paddingTop: 15, overflow: "hidden" },
   infoItem: { flex: 1, padding: 15 },
+  chart: {
+    height: "100%",
+    width: "100%",
+    backgroundColor: "white",
+    paddingTop: 3,
+  },
+  chartTitle: {
+    position: "absolute",
+    width: "100%",
+    textAlign: "center",
+    top: -2,
+    color: "gray",
+    fontSize: 12,
+  },
 });
 
 export default styles;

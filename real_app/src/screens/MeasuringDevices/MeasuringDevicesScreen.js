@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useLayoutEffect } from "react";
 import {
   Text,
   View,
@@ -12,50 +12,43 @@ import MeasuringDeviceMiniature from "../../components/MeasuringDeviceMiniature/
 import styles from "./styles";
 
 export default function MeasuringDeviceScreen({ navigation }) {
-  const [devices, setDevices] = useState([
-    {
-      deviceName: "Device1",
-      powerProduction: 23244,
-      image: "../../../assets/as-unit.webp",
-      deviceStatus: "on",
-      key: "1",
-    },
-    {
-      deviceName: "Device2",
-      powerProduction: 52303.22,
-      image: "../../../assets/as-unit.webp",
-      deviceStatus: "on",
-      key: "2",
-    },
-    {
-      deviceName: "Device3",
-      powerProduction: 52340,
-      image: "../../../assets/as-unit.webp",
-      deviceStatus: "off",
-      key: "3",
-    },
-    {
-      deviceName: "Device4",
-      powerProduction: 24051.5,
-      image: "../../../assets/as-unit.webp",
-      deviceStatus: "off",
-      key: "4",
-    },
-    {
-      deviceName: "Device5",
-      powerProduction: 34203.2,
-      image: "../../../assets/as-unit.webp",
-      deviceStatus: "on",
-      key: "5",
-    },
-    {
-      deviceName: "Device6",
-      powerProduction: 42359.3,
-      image: "../../../assets/as-unit.webp",
-      deviceStatus: "on",
-      key: "6",
-    },
-  ]);
+  const [devices, setDevices] = useState([]);
+  const tempDevices = [];
+  const promises = [];
+
+  const asyncGetDevice = (deviceId) => {
+    return new Promise((resolve) => {
+      fetch(`https://smart-pv.herokuapp.com/measurement/devices/${deviceId}`, {
+        method: "GET",
+      })
+        .then((response) => response.json())
+        .then((responseJson) => tempDevices.push(responseJson))
+        .then(() => {
+          resolve();
+        });
+    });
+  };
+
+  const fetchData = async () => {
+    const devicesResponse = await fetch(
+      "https://smart-pv.herokuapp.com/measurement/devices",
+      { method: "GET" }
+    );
+
+    const deviceIds = await devicesResponse.json();
+
+    for (var i = 0; i < deviceIds.length; i++) {
+      promises.push(asyncGetDevice(deviceIds[i]));
+    }
+
+    Promise.all(promises).then(() => {
+      setDevices(tempDevices);
+    });
+  };
+
+  useLayoutEffect(() => {
+    fetchData();
+  }, []);
 
   return (
     <View style={styles.container}>
@@ -71,16 +64,10 @@ export default function MeasuringDeviceScreen({ navigation }) {
                 navigation.navigate("MeasuringDevice", item);
               }}
             >
-              {/* <View style={{ backgroundColor: "red" }}> */}
-              {/* <MeasuringDeviceMiniature
-                deviceName={item.deviceName}
-                deviceStatus={item.status}
-                style={{ flex: 1 }}
-              ></MeasuringDeviceMiniature> */}
               <MeasuringDeviceMin
-                deviceName={item.deviceName}
-                deviceStatus={item.status}
-                production={item.powerProduction}
+                deviceName={item.name}
+                deviceStatus={item.name}
+                production={item.measuredEnergy}
               />
               {/* </View> */}
             </TouchableOpacity>

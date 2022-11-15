@@ -33,7 +33,8 @@ const styles = StyleSheet.create({
     backgroundColor: "#F5F5F5",
   },
   settingText: {
-    paddingLeft: 35,
+    paddingLeft: 25,
+    fontSize: 14,
   },
 });
 

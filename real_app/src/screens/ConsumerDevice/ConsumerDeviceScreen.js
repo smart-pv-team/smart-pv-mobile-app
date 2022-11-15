@@ -1,13 +1,5 @@
 import React, { useState } from "react";
-import {
-  View,
-  Text,
-  StatusBar,
-  Image,
-  Dimensions,
-  Button,
-  FlatList,
-} from "react-native";
+import { View, Text, StatusBar } from "react-native";
 import { LineChart } from "react-native-chart-kit";
 import { ScrollView } from "react-native-gesture-handler";
 import { TouchableOpacity } from "react-native-gesture-handler";
@@ -35,40 +27,8 @@ export default function ConsumerDeviceScreen({ route, navigation }) {
     { x: 10, y: 1 },
   ];
 
-  // const [data2, setData2] = useState([
-  //   { x: -2, y: 4 },
-  //   { x: -1, y: 0 },
-  //   { x: 0, y: 1 },
-  //   { x: 1, y: 7 },
-  //   { x: 8, y: 10 },
-  //   { x: 9, y: 9.5 },
-  //   { x: 10, y: 8 },
-  // ]);
-
-  // const data2 = [
-  //   { x: -2, y: 4 },
-  //   { x: -1, y: 10 },
-  //   { x: 0, y: 1 },
-  //   { x: 1, y: 7 },
-  //   { x: 8, y: 10 },
-  //   { x: 9, y: 9.5 },
-  //   { x: 10, y: 8 },
-  // ];
-
-  const { deviceName, powerConsumption, image, deviceStatus, key } =
-    route.params;
-
-  // const change = () => {
-  //   setData2([
-  //     { x: -2, y: 1 },
-  //     { x: -1, y: 0 },
-  //     { x: 0, y: 0 },
-  //     { x: 1, y: 1 },
-  //     { x: 8, y: 0 },
-  //     { x: 9, y: 1 },
-  //     { x: 10, y: 1 },
-  //   ]);
-  // };
+  console.log(route.params);
+  const { name, ipAddress, isOn, controlParameters } = route.params;
 
   const [labels, setLabels] = useState([
     "January",
@@ -231,7 +191,7 @@ export default function ConsumerDeviceScreen({ route, navigation }) {
           <View style={styles.deviceInfo}>
             <View style={styles.deviceName}>
               <Text style={{ fontSize: 20, fontWeight: "500" }}>
-                {deviceName}
+                {name.length > 25 ? name.substr(0, 25) + "..." : name}
               </Text>
               <Text>NAZWA FARMY</Text>
             </View>
@@ -273,22 +233,6 @@ export default function ConsumerDeviceScreen({ route, navigation }) {
                     { backgroundColor: AppStyles.color.secondaryColor },
                   ]}
                 >
-                  <Text style={{ fontWeight: "600" }}>MIN HYSTERESIS</Text>
-                </View>
-                <View
-                  style={[
-                    styles.cell,
-                    { backgroundColor: AppStyles.color.primaryColor },
-                  ]}
-                >
-                  <Text style={{ fontWeight: "600" }}>MAX HYSTERESIS</Text>
-                </View>
-                <View
-                  style={[
-                    styles.cell,
-                    { backgroundColor: AppStyles.color.secondaryColor },
-                  ]}
-                >
                   <Text style={{ fontWeight: "600" }}>IP ADDRESS</Text>
                 </View>
               </View>
@@ -307,7 +251,7 @@ export default function ConsumerDeviceScreen({ route, navigation }) {
                     },
                   ]}
                 >
-                  <Text>{deviceStatus.toUpperCase()}</Text>
+                  <Text>{isOn ? "ON" : "OFF"}</Text>
                 </View>
                 <View
                   style={[
@@ -329,7 +273,7 @@ export default function ConsumerDeviceScreen({ route, navigation }) {
                     },
                   ]}
                 >
-                  <Text>{powerConsumption} kWh</Text>
+                  <Text>{controlParameters.powerConsumption} kWh</Text>
                 </View>
                 <View
                   style={[
@@ -340,29 +284,7 @@ export default function ConsumerDeviceScreen({ route, navigation }) {
                     },
                   ]}
                 >
-                  <Text>0</Text>
-                </View>
-                <View
-                  style={[
-                    styles.cell,
-                    {
-                      backgroundColor: AppStyles.color.primaryColorLighter,
-                      borderRightWidth: 0,
-                    },
-                  ]}
-                >
-                  <Text>10</Text>
-                </View>
-                <View
-                  style={[
-                    styles.cell,
-                    {
-                      backgroundColor: AppStyles.color.secondaryColorLighter,
-                      borderRightWidth: 0,
-                    },
-                  ]}
-                >
-                  <Text>255.255.255.255</Text>
+                  <Text>{ipAddress}</Text>
                 </View>
               </View>
             </View>

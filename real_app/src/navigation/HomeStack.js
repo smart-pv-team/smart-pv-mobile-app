@@ -1,8 +1,5 @@
 import { createStackNavigator } from "@react-navigation/stack";
 import HomeScreen from "../screens/Home/HomeScreen";
-import MeasuringDevicesScreen from "../screens/MeasuringDevices/MeasuringDevicesScreen";
-import MeasuringDeviceScreen from "../screens/MeasuringDevice/MeasuringDeviceScreen";
-import ConsumerDevicesScreen from "../screens/ConsumerDevices/ConsumerDevicesScreen";
 import DrawerHeader from "../components/DrawerHeader/DrawerHeader";
 import React from "react";
 import AppStyles from "../AppStyles";

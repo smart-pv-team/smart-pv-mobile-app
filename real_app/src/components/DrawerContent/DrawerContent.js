@@ -4,7 +4,7 @@ import {
   DrawerItem,
   DrawerItemList,
 } from "@react-navigation/drawer";
-import { MaterialIcons } from "@expo/vector-icons";
+import { MaterialIcons, Entypo } from "@expo/vector-icons";
 import { TouchableOpacity } from "react-native-gesture-handler";
 
 import styles from "./styles";
@@ -35,8 +35,8 @@ export default function CustomDrawerContent(props) {
             paddingLeft: 2,
           }}
         >
-          <MaterialIcons name="settings" size={30} />
-          <Text style={styles.settingText}>Settings</Text>
+          <Entypo name="log-out" size={30} style={{ paddingLeft: 10 }} />
+          <Text style={styles.settingText}>Log out</Text>
         </TouchableOpacity>
       </View>
     </View>

@@ -72,7 +72,7 @@ export default function HomeScreen({ navigation }) {
           </View>
           <View style={styles.smallContainer}>
             <View style={styles.circle}>
-              <Text style={[styles.text, { fontSize: 18, fontWeight: "" }]}>
+              <Text style={[styles.text, { fontSize: 18, fontWeight: "600" }]}>
                 212312 kWh
               </Text>
             </View>
@@ -103,7 +103,7 @@ export default function HomeScreen({ navigation }) {
       <View style={styles.lowerContainer}>
         <Chart
           viewport={{ size: { width: 10 } }}
-          style={{ height: "100%", width: "100%", backgroundColor: "white" }}
+          style={styles.chart}
           xDomain={{ min: -2, max: 10 }}
           yDomain={{ min: -0.05, max: 1.05 }}
           xLabels={"jan"}
@@ -136,6 +136,7 @@ export default function HomeScreen({ navigation }) {
             theme={{ stroke: { color: "red", width: 1 } }}
           />
         </Chart>
+        <Text style={styles.chartTitle}>Total measurements</Text>
       </View>
     </View>
   );
