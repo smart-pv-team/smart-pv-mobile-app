@@ -4,31 +4,19 @@ import { Dimensions } from "react-native";
 
 const styles = StyleSheet.create({
   container: { flex: 1, alignItems: "center" },
-  // deviceImage: {
-  //   // height: "100%",
-  //   width: "100%",
-  //   height: undefined,
-  //   // width: undefined,
-  //   aspectRatio: 1,
-  //   resizeMode: "contain",
-  // },
   deviceImage: { resizeMode: "contain", height: 200 },
   graph: {
     flex: 1,
     width: "100%",
-    // backgroundColor: "lightblue",
-    // justifyContent: "center",
     alignItems: "center",
   },
   buttons: {
     flexDirection: "row",
     width: "97%",
-    // backgroundColor: "red",
     justifyContent: "center",
     paddingTop: 4,
   },
   button: {
-    // width: Dimensions.get("screen").width / 3 - 3,
     height: 40,
     width: "100%",
     justifyContent: "center",
@@ -55,6 +43,10 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     borderTopWidth: 1,
     borderRightWidth: 1,
+  },
+  firstColumnText: {
+    fontWeight: "600",
+    textAlign: "center",
   },
 });
 

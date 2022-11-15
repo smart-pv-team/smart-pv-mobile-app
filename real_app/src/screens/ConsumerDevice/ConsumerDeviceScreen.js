@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useLayoutEffect } from "react";
 import { View, Text, StatusBar } from "react-native";
 import { LineChart } from "react-native-chart-kit";
 import { ScrollView } from "react-native-gesture-handler";
@@ -14,6 +14,8 @@ import AppStyles from "../../AppStyles";
 import styles from "./styles";
 
 export default function ConsumerDeviceScreen({ route, navigation }) {
+  const [farmName, setFarmName] = useState("");
+
   const data1 = [
     { x: -2, y: 1 },
     { x: -2, y: 0 },
@@ -28,7 +30,7 @@ export default function ConsumerDeviceScreen({ route, navigation }) {
   ];
 
   console.log(route.params);
-  const { name, ipAddress, isOn, controlParameters } = route.params;
+  const { name, ipAddress, isOn, controlParameters, farmId } = route.params;
 
   const [labels, setLabels] = useState([
     "January",
@@ -81,6 +83,19 @@ export default function ConsumerDeviceScreen({ route, navigation }) {
   };
 
   const yLabels = ["OFF", "ON"];
+
+  const getFarmName = async () => {
+    const response = await fetch(
+      `https://smart-pv.herokuapp.com/management/farms/${farmId}`,
+      { method: "GET" }
+    );
+    const responseJson = await response.json();
+    setFarmName(responseJson.name);
+  };
+
+  useLayoutEffect(() => {
+    getFarmName();
+  }, []);
 
   return (
     <View style={styles.container}>
@@ -193,7 +208,8 @@ export default function ConsumerDeviceScreen({ route, navigation }) {
               <Text style={{ fontSize: 20, fontWeight: "500" }}>
                 {name.length > 25 ? name.substr(0, 25) + "..." : name}
               </Text>
-              <Text>NAZWA FARMY</Text>
+              {farmName != null && <Text>{farmName.toUpperCase()}</Text>}
+              {farmName == null && <Text>{farmId}</Text>}
             </View>
 
             <View style={{ flex: 4, flexDirection: "row" }}>
