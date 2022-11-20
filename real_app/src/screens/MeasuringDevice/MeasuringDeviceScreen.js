@@ -1,14 +1,5 @@
 import React, { useLayoutEffect, useState } from "react";
-import {
-  View,
-  Text,
-  StatusBar,
-  Image,
-  Dimensions,
-  Button,
-  FlatList,
-} from "react-native";
-import { LineChart } from "react-native-chart-kit";
+import { View, Text, StatusBar } from "react-native";
 import {
   Chart,
   VerticalAxis,
@@ -16,7 +7,6 @@ import {
   Line,
   Area,
 } from "react-native-responsive-linechart";
-import { ScrollView } from "react-native-gesture-handler";
 import { TouchableOpacity } from "react-native-gesture-handler";
 import AppStyles from "../../AppStyles";
 import styles from "./styles";
@@ -26,6 +16,10 @@ export default function ConsumerDeviceScreen({ route, navigation }) {
   const [latestMeasurement, setLatestMeasurement] = useState();
   const [farmName, setFarmName] = useState();
   const [measurements, setMeasurements] = useState([]);
+
+  const currentDate = new Date();
+  const fromDate = new Date(currentDate);
+  fromDate.setDate(fromDate.getDate() - 7);
 
   const [oneWeekStyle, setOneWeekStyle] = useState({ color: "gray" });
   const [oneMonthStyle, setOneMonthStyle] = useState({ color: "black" });
@@ -75,15 +69,17 @@ export default function ConsumerDeviceScreen({ route, navigation }) {
     );
     const responseJson = await response.json();
     setFarmName(responseJson.name);
-    console.log(farmName);
   };
 
-  const getChartData = async (from, to) => {
+  const getChartData = async () => {
+    console.log("FROM DATE: ", fromDate);
     const response = await fetch(
-      `https://smart-pv.herokuapp.com/measurement/devices/${id}/range?startDate=${from}&endDate=${to}`,
+      `https://smart-pv.herokuapp.com/measurement/devices/${id}/range?startDate=${fromDate.toISOString()}&endDate=${currentDate.toISOString()}`,
       { method: "GET" }
     );
+
     const responseJson = await response.json();
+    console.log(response.status);
     console.log("Length: ", responseJson.length);
 
     const tempData = [];
@@ -91,23 +87,24 @@ export default function ConsumerDeviceScreen({ route, navigation }) {
       tempData.push({ x: i, y: responseJson[i].measurement });
     }
 
-    setMeasurements(tempData);
+    if (tempData.length > 4000) {
+      setMeasurements(tempData.slice(0, 4000));
+    } else {
+      setMeasurements(tempData);
+    }
   };
 
   useLayoutEffect(() => {
     getLatestMeasurement();
     getFarmName();
-
-    const date = new Date();
-    console.log(date);
-    // var date = new Date().getTimezoneOffset();
-    // console.log(date);
+    getChartData();
+    console.log("UseLayoutEffect");
   }, []);
 
-  const data1 = [
-    { x: 1, y: 0.5 },
-    { x: 2, y: 0.5 },
-  ];
+  const setFromDate = (subtractDays = 0, subtractMonths = 0) => {
+    fromDate.setMonth(currentDate.getMonth() - subtractMonths);
+    fromDate.setDate(currentDate.getDate() - subtractDays);
+  };
 
   return (
     <View style={styles.container}>
@@ -116,15 +113,16 @@ export default function ConsumerDeviceScreen({ route, navigation }) {
         <Chart
           viewport={{ size: { width: 100 } }}
           style={{ height: 260, width: "100%", backgroundColor: "#eee" }}
-          xDomain={{ min: 0, max: 700 }}
+          xDomain={{ min: 0, max: 160000 }}
           yDomain={{ min: -20000, max: 30000 }}
           xLabels={"jan"}
           yLabels={["OFF", "ON"]}
           padding={{ left: 25, top: 10, bottom: 30, right: 20 }}
         >
           <VerticalAxis
-            // tickCount={2}
+            tickCount={2}
             // tickValues={[0, 1]}
+            tickValues={[0]}
             theme={{
               labels: {
                 // label: { rotation: -20 },
@@ -134,7 +132,7 @@ export default function ConsumerDeviceScreen({ route, navigation }) {
             }}
           />
           <HorizontalAxis
-            tickCount={3}
+            tickCount={Math.floor(measurements.length / 100)}
             theme={{
               axis: { stroke: { color: "#aaa", width: 2 } },
               ticks: { stroke: { color: "#aaa", width: 2 } },
@@ -168,49 +166,6 @@ export default function ConsumerDeviceScreen({ route, navigation }) {
             theme={{ stroke: { color: "blue", width: 1 } }}
           /> */}
         </Chart>
-
-        {/* {testData.length != 0 && (
-          <LineChart
-            viewport={{ size: { width: 0.5 } }}
-            // data={{
-            //   labels: labels,
-            //   datasets: [
-            //     {
-            //       data: data,
-            //     },
-            //   ],
-            // }}
-            data={{ datasets: [{ data: testData }] }}
-            fromZero={false}
-            width={Dimensions.get("window").width}
-            height={260}
-            // yAxisLabel="$"
-            yAxisSuffix="kWh"
-            yAxisInterval={1} // optional, defaults to 1
-            chartConfig={{
-              // backgroundColor: "#e26a00",
-              backgroundGradientFrom: AppStyles.color.secondaryColor,
-              backgroundGradientTo: AppStyles.color.secondaryColor,
-              decimalPlaces: 2, // optional, defaults to 2dp
-              color: (opacity = 1) => `rgba(100, 255, 100, ${opacity})`,
-              labelColor: (opacity = 1) => `rgba(0, 0, 0, ${opacity})`,
-              style: {
-                borderRadius: 16,
-              },
-              propsForDots: {
-                r: "6",
-                strokeWidth: "2",
-                stroke: "#ffa726",
-              },
-            }}
-            bezier
-            style={{
-              marginTop: 0,
-              marginVertical: 8,
-              borderBottomWidth: 0.5,
-            }}
-          />
-        )} */}
         <View style={styles.buttons}>
           <View style={{ flex: 1 }}>
             <TouchableOpacity
@@ -223,13 +178,11 @@ export default function ConsumerDeviceScreen({ route, navigation }) {
                 },
                 oneWeekBorder,
               ]}
-              // onPress={() => updateButtonStyle(0)}
-              onPress={() =>
-                getChartData(
-                  "2022-11-14T16:52:44.963Z",
-                  "2022-11-15T16:52:44.963Z"
-                )
-              }
+              onPress={() => {
+                updateButtonStyle(0);
+                setFromDate(7, 0);
+                getChartData();
+              }}
             >
               <Text style={oneWeekStyle}>1 WEEK</Text>
             </TouchableOpacity>
@@ -237,7 +190,11 @@ export default function ConsumerDeviceScreen({ route, navigation }) {
           <View style={{ flex: 1 }}>
             <TouchableOpacity
               style={[styles.button, oneMonthBorder]}
-              onPress={() => updateButtonStyle(1)}
+              onPress={() => {
+                updateButtonStyle(1);
+                setFromDate(0, 1);
+                getChartData();
+              }}
             >
               <Text style={oneMonthStyle}>1 MONTH</Text>
             </TouchableOpacity>
@@ -253,7 +210,11 @@ export default function ConsumerDeviceScreen({ route, navigation }) {
                 },
                 threeMonthsBorder,
               ]}
-              onPress={() => updateButtonStyle(2)}
+              onPress={() => {
+                updateButtonStyle(2);
+                setFromDate(0, 3);
+                getChartData();
+              }}
             >
               <Text style={threeMonthsStyle}>3 MONTHS</Text>
             </TouchableOpacity>
@@ -275,21 +236,14 @@ export default function ConsumerDeviceScreen({ route, navigation }) {
               {farmName == null && <Text>{farmId}</Text>}
             </View>
 
-            <View style={{ flex: 4, flexDirection: "row" }}>
+            <View style={styles.detailedInfo}>
               <View
                 style={{
                   flex: 0.7,
-                  backgroundColor: AppStyles.color.primaryColor,
+                  backgroundColor: "#EBEBEB",
                 }}
               >
-                <View
-                  style={[
-                    styles.cell,
-                    {
-                      backgroundColor: AppStyles.color.primaryColor,
-                    },
-                  ]}
-                >
+                <View style={[styles.cell]}>
                   <Text style={styles.firstColumnText}>
                     LATEST MEASUEREMENT
                   </Text>
@@ -302,12 +256,7 @@ export default function ConsumerDeviceScreen({ route, navigation }) {
                 >
                   <Text style={styles.firstColumnText}>24 HOUR MAX</Text>
                 </View>
-                <View
-                  style={[
-                    styles.cell,
-                    { backgroundColor: AppStyles.color.primaryColor },
-                  ]}
-                >
+                <View style={[styles.cell]}>
                   <Text style={styles.firstColumnText}>24 HOUR MIN</Text>
                 </View>
                 <View
@@ -322,14 +271,13 @@ export default function ConsumerDeviceScreen({ route, navigation }) {
               <View
                 style={{
                   flex: 1,
-                  backgroundColor: AppStyles.color.secondaryColor,
+                  backgroundColor: "#EBEBEB",
                 }}
               >
                 <View
                   style={[
                     styles.cell,
                     {
-                      backgroundColor: AppStyles.color.primaryColorLighter,
                       borderRightWidth: 0,
                     },
                   ]}
@@ -340,7 +288,7 @@ export default function ConsumerDeviceScreen({ route, navigation }) {
                   style={[
                     styles.cell,
                     {
-                      backgroundColor: AppStyles.color.secondaryColorLighter,
+                      backgroundColor: "white",
                       borderRightWidth: 0,
                     },
                   ]}
@@ -351,7 +299,7 @@ export default function ConsumerDeviceScreen({ route, navigation }) {
                   style={[
                     styles.cell,
                     {
-                      backgroundColor: AppStyles.color.primaryColorLighter,
+                      backgroundColor: "#EBEBEB",
                       borderRightWidth: 0,
                     },
                   ]}
@@ -362,7 +310,7 @@ export default function ConsumerDeviceScreen({ route, navigation }) {
                   style={[
                     styles.cell,
                     {
-                      backgroundColor: AppStyles.color.secondaryColorLighter,
+                      backgroundColor: "white",
                       borderRightWidth: 0,
                     },
                   ]}
@@ -375,7 +323,5 @@ export default function ConsumerDeviceScreen({ route, navigation }) {
         </View>
       </View>
     </View>
-
-    //farmName, deviceName, ipAddress, isOn, workingHours, powerConsumption, min hysteresis, max hysteresis
   );
 }

@@ -33,6 +33,12 @@ const styles = StyleSheet.create({
     borderRadius: 9,
     overflow: "hidden",
   },
+  detailedInfo: {
+    flex: 4,
+    flexDirection: "row",
+    borderTopWidth: 1,
+    borderTopColor: "#8C8C8C",
+  },
   deviceName: {
     alignItems: "center",
     flex: 1,
@@ -41,8 +47,9 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: "center",
     justifyContent: "center",
-    borderTopWidth: 1,
+    // borderTopWidth: 1,
     borderRightWidth: 1,
+    borderColor: "#989898",
   },
   firstColumnText: {
     fontWeight: "600",

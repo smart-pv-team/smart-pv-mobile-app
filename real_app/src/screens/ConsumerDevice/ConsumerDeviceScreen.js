@@ -1,7 +1,5 @@
 import React, { useState, useLayoutEffect } from "react";
 import { View, Text, StatusBar } from "react-native";
-import { LineChart } from "react-native-chart-kit";
-import { ScrollView } from "react-native-gesture-handler";
 import { TouchableOpacity } from "react-native-gesture-handler";
 import {
   Chart,
@@ -15,6 +13,7 @@ import styles from "./styles";
 
 export default function ConsumerDeviceScreen({ route, navigation }) {
   const [farmName, setFarmName] = useState("");
+  const [activityMeasurement, setActivityMeasurements] = useState([]);
 
   const data1 = [
     { x: -2, y: 1 },
