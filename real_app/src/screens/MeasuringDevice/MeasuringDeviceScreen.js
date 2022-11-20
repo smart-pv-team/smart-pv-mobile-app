@@ -240,7 +240,8 @@ export default function ConsumerDeviceScreen({ route, navigation }) {
               <View
                 style={{
                   flex: 0.7,
-                  backgroundColor: "#EBEBEB",
+                  // backgroundColor: AppStyles.color.primaryColor,
+                  // backgroundColor: "#EBEBEB",
                 }}
               >
                 <View style={[styles.cell]}>
@@ -271,7 +272,7 @@ export default function ConsumerDeviceScreen({ route, navigation }) {
               <View
                 style={{
                   flex: 1,
-                  backgroundColor: "#EBEBEB",
+                  // backgroundColor: "#EBEBEB",
                 }}
               >
                 <View
@@ -299,7 +300,7 @@ export default function ConsumerDeviceScreen({ route, navigation }) {
                   style={[
                     styles.cell,
                     {
-                      backgroundColor: "#EBEBEB",
+                      // backgroundColor: "#EBEBEB",
                       borderRightWidth: 0,
                     },
                   ]}
