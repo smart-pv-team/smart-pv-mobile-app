@@ -8,6 +8,7 @@ import {
   Line,
   Area,
 } from "react-native-responsive-linechart";
+import { LinearGradient } from "expo-linear-gradient";
 import AppStyles from "../../AppStyles";
 import styles from "./styles";
 
@@ -16,9 +17,9 @@ export default function ConsumerDeviceScreen({ route, navigation }) {
   const [activityMeasurement, setActivityMeasurements] = useState([]);
 
   const data1 = [
-    { x: -2, y: 1 },
-    { x: -2, y: 0 },
-    { x: -1, y: 0 },
+    { x: 0, y: 1 },
+    { x: 0, y: 0 },
+    { x: 1, y: 0 },
     { x: 3, y: 0 },
     { x: 3, y: 1 },
     { x: 8, y: 1 },
@@ -26,10 +27,23 @@ export default function ConsumerDeviceScreen({ route, navigation }) {
     { x: 9, y: 0 },
     { x: 9, y: 1 },
     { x: 10, y: 1 },
+    { x: 15, y: 1 },
+    { x: 15, y: 0 },
+    { x: 20, y: 0 },
+    { x: 20, y: 1 },
+    { x: 30, y: 1 },
   ];
 
-  console.log(route.params);
-  const { name, ipAddress, isOn, controlParameters, farmId } = route.params;
+  // console.log(route.params);
+  const {
+    name,
+    deviceModel,
+    workingHours,
+    isOn,
+    controlParameters,
+    creationDate,
+    farmId,
+  } = route.params;
 
   const [labels, setLabels] = useState([
     "January",
@@ -94,23 +108,36 @@ export default function ConsumerDeviceScreen({ route, navigation }) {
 
   useLayoutEffect(() => {
     getFarmName();
+    console.log(
+      workingHours,
+      isOn,
+      controlParameters,
+      creationDate,
+      farmId,
+      controlParameters.lastStatusChange
+    );
   }, []);
 
   return (
     <View style={styles.container}>
       <StatusBar />
+      {/* <LinearGradient
+        colors={["white", "#969696"]}
+        start={{ x: 0.5, y: 0 }}
+        end={{ x: 0.5, y: 1 }}
+        style={{ flex: 1, width: "100%" }}
+      > */}
       <View style={styles.graph}>
         <Chart
           viewport={{ size: { width: 10 } }}
-          style={{ height: 260, width: "100%", backgroundColor: "#eee" }}
-          xDomain={{ min: -2, max: 10 }}
+          style={{ height: 260, width: "100%" }}
+          xDomain={{ min: 0, max: 30 }}
           yDomain={{ min: -0.05, max: 1.05 }}
           xLabels={"jan"}
           yLabels={["OFF", "ON"]}
-          padding={{ left: 25, top: 10, bottom: 30, right: 20 }}
+          padding={{ left: 25, top: 10, bottom: 20, right: 20 }}
         >
           <VerticalAxis
-            // tickCount={2}
             tickValues={[0, 1]}
             theme={{
               labels: {
@@ -134,8 +161,8 @@ export default function ConsumerDeviceScreen({ route, navigation }) {
           <Area
             theme={{
               gradient: {
-                from: { color: "red", opacity: 0.1 },
-                to: { color: "red", opacity: 0.1 },
+                from: { color: "#227BEA", opacity: 0.5 },
+                to: { color: "#227BEA", opacity: 0.1 },
               },
             }}
             data={data1}
@@ -143,7 +170,7 @@ export default function ConsumerDeviceScreen({ route, navigation }) {
           <Line
             data={data1}
             smoothing="none"
-            theme={{ stroke: { color: "red", width: 1 } }}
+            theme={{ stroke: { color: "#227BEA", width: 1 } }}
           />
           {/* <Line
             data={data2}
@@ -151,163 +178,213 @@ export default function ConsumerDeviceScreen({ route, navigation }) {
             theme={{ stroke: { color: "blue", width: 1 } }}
           /> */}
         </Chart>
-        <View style={styles.buttons}>
-          <View style={{ flex: 1 }}>
-            <TouchableOpacity
-              style={[
-                styles.button,
-                {
-                  borderRightWidth: 0,
-                  borderBottomLeftRadius: 9,
-                  borderTopLeftRadius: 9,
-                },
-                oneWeekBorder,
-              ]}
-              onPress={() => updateButtonStyle(0)}
-            >
-              <Text style={oneWeekStyle}>1 DAY</Text>
-            </TouchableOpacity>
-          </View>
-          <View style={{ flex: 1 }}>
-            <TouchableOpacity
-              style={[styles.button, oneMonthBorder]}
-              onPress={() => updateButtonStyle(1)}
-            >
-              <Text style={oneMonthStyle}>1 WEEK</Text>
-            </TouchableOpacity>
-          </View>
-          <View style={{ flex: 1 }}>
-            <TouchableOpacity
-              style={[
-                styles.button,
-                {
-                  borderLeftWidth: 0,
-                  borderBottomRightRadius: 9,
-                  borderTopRightRadius: 9,
-                },
-                threeMonthsBorder,
-              ]}
-              onPress={() => updateButtonStyle(2)}
-            >
-              <Text style={threeMonthsStyle}>1 MONTH</Text>
-            </TouchableOpacity>
-          </View>
-        </View>
+        <Text style={styles.chartTitle}>Device activity</Text>
       </View>
-      <View style={{ flex: 1, width: "100%" }}>
+      <LinearGradient
+        colors={[AppStyles.color.backgroundColor, "#969696"]}
+        start={{ x: 0.5, y: 0 }}
+        end={{ x: 0.5, y: 1 }}
+        style={{
+          flex: 1.5,
+          width: "100%",
+          justifyContent: "center",
+          alignItems: "center",
+        }}
+      >
         <View
           style={{
             flex: 1,
-            paddingHorizontal: 7,
-            paddingVertical: 10,
+            width: "100%",
+            alignItems: "center",
           }}
         >
-          <View style={styles.deviceInfo}>
-            <View style={styles.deviceName}>
-              <Text style={{ fontSize: 20, fontWeight: "500" }}>
-                {name.length > 25 ? name.substr(0, 25) + "..." : name}
-              </Text>
-              {farmName != null && <Text>{farmName.toUpperCase()}</Text>}
-              {farmName == null && <Text>{farmId}</Text>}
+          <View style={styles.buttons}>
+            <View style={{ flex: 1 }}>
+              <TouchableOpacity
+                style={[
+                  styles.button,
+                  {
+                    borderRightWidth: 0,
+                    borderBottomLeftRadius: 9,
+                    borderTopLeftRadius: 9,
+                  },
+                  oneWeekBorder,
+                ]}
+                onPress={() => {
+                  updateButtonStyle(0);
+                  setFromDate(7, 0);
+                  getChartData();
+                }}
+              >
+                <Text style={oneWeekStyle}>1 WEEK</Text>
+              </TouchableOpacity>
             </View>
-
-            <View style={{ flex: 4, flexDirection: "row" }}>
-              <View
-                style={{
-                  flex: 0.7,
-                  backgroundColor: AppStyles.color.primaryColor,
+            <View style={{ flex: 1 }}>
+              <TouchableOpacity
+                style={[
+                  styles.button,
+                  { borderWidth: 1, borderRightWidth: 0 },
+                  oneMonthBorder,
+                ]}
+                onPress={() => {
+                  updateButtonStyle(1);
+                  setFromDate(0, 1);
+                  getChartData();
                 }}
               >
-                <View
-                  style={[
-                    styles.cell,
-                    { backgroundColor: AppStyles.color.primaryColor },
-                  ]}
-                >
-                  <Text style={{ fontWeight: "600" }}>DEVICE STATUS</Text>
-                </View>
-                <View
-                  style={[
-                    styles.cell,
-                    { backgroundColor: AppStyles.color.secondaryColor },
-                  ]}
-                >
-                  <Text style={{ fontWeight: "600" }}>ACTIVE TASK</Text>
-                </View>
-                <View
-                  style={[
-                    styles.cell,
-                    { backgroundColor: AppStyles.color.primaryColor },
-                  ]}
-                >
-                  <Text style={{ fontWeight: "600" }}>CONSUMPTION</Text>
-                </View>
-                <View
-                  style={[
-                    styles.cell,
-                    { backgroundColor: AppStyles.color.secondaryColor },
-                  ]}
-                >
-                  <Text style={{ fontWeight: "600" }}>IP ADDRESS</Text>
-                </View>
+                <Text style={oneMonthStyle}>1 MONTH</Text>
+              </TouchableOpacity>
+            </View>
+            <View style={{ flex: 1 }}>
+              <TouchableOpacity
+                style={[
+                  styles.button,
+                  {
+                    // borderLeftWidth: 0,
+                    borderBottomRightRadius: 9,
+                    borderTopRightRadius: 9,
+                  },
+                  threeMonthsBorder,
+                ]}
+                onPress={() => {
+                  updateButtonStyle(2);
+                  setFromDate(0, 3);
+                  getChartData();
+                }}
+              >
+                <Text style={threeMonthsStyle}>3 MONTHS</Text>
+              </TouchableOpacity>
+            </View>
+          </View>
+          <View
+            style={{
+              flex: 1,
+              width: "99%",
+              paddingHorizontal: 7,
+              paddingBottom: 7,
+              paddingTop: 20,
+            }}
+          >
+            <View style={styles.deviceInfo}>
+              <View style={styles.deviceName}>
+                <Text style={{ fontSize: 20, fontWeight: "500" }}>{name}</Text>
+                <Text>{deviceModel.toUpperCase()}</Text>
               </View>
-              <View
-                style={{
-                  flex: 1,
-                  backgroundColor: AppStyles.color.secondaryColor,
-                }}
-              >
+
+              <View style={styles.detailedInfo}>
                 <View
-                  style={[
-                    styles.cell,
-                    {
-                      backgroundColor: AppStyles.color.primaryColorLighter,
-                      borderRightWidth: 0,
-                    },
-                  ]}
+                  style={{
+                    flex: 0.7,
+                    // backgroundColor: AppStyles.color.primaryColor,
+                    // backgroundColor: "#EBEBEB",
+                  }}
                 >
-                  <Text>{isOn ? "ON" : "OFF"}</Text>
+                  <View style={[styles.cell]}>
+                    <Text style={styles.firstColumnText}>STATUS</Text>
+                  </View>
+                  <View
+                    style={[
+                      styles.cell,
+                      { backgroundColor: AppStyles.color.secondaryColor },
+                    ]}
+                  >
+                    <Text style={styles.firstColumnText}>WORKING HOURS</Text>
+                  </View>
+                  <View style={[styles.cell]}>
+                    <Text style={styles.firstColumnText}>CONSUMPTION</Text>
+                  </View>
+                  <View
+                    style={[
+                      styles.cell,
+                      { backgroundColor: AppStyles.color.secondaryColor },
+                    ]}
+                  >
+                    <Text style={styles.firstColumnText}>FARM</Text>
+                  </View>
+                  <View style={[styles.cell]}>
+                    <Text style={styles.firstColumnText}>CREATION DATE</Text>
+                  </View>
                 </View>
                 <View
-                  style={[
-                    styles.cell,
-                    {
-                      backgroundColor: AppStyles.color.secondaryColorLighter,
-                      borderRightWidth: 0,
-                    },
-                  ]}
+                  style={{
+                    flex: 1,
+                    // backgroundColor: "#EBEBEB",
+                  }}
                 >
-                  <Text>Freezing</Text>
-                </View>
-                <View
-                  style={[
-                    styles.cell,
-                    {
-                      backgroundColor: AppStyles.color.primaryColorLighter,
-                      borderRightWidth: 0,
-                    },
-                  ]}
-                >
-                  <Text>{controlParameters.powerConsumption} kWh</Text>
-                </View>
-                <View
-                  style={[
-                    styles.cell,
-                    {
-                      backgroundColor: AppStyles.color.secondaryColorLighter,
-                      borderRightWidth: 0,
-                    },
-                  ]}
-                >
-                  <Text>{ipAddress}</Text>
+                  <View
+                    style={[
+                      styles.cell,
+                      {
+                        borderRightWidth: 0,
+                      },
+                    ]}
+                  >
+                    {isOn && <Text>ON - for {4} hours</Text>}
+                    {!isOn && (
+                      <Text>
+                        Last active{" "}
+                        {controlParameters.lastStatusChange
+                          .split("T")[0]
+                          .replace("-", "/")
+                          .replace("-", "/")}
+                      </Text>
+                    )}
+                    {/* <Text>{latestMeasurement || ""}</Text> */}
+                  </View>
+                  <View
+                    style={[
+                      styles.cell,
+                      {
+                        backgroundColor: "white",
+                        borderRightWidth: 0,
+                      },
+                    ]}
+                  >
+                    <Text>{workingHours}</Text>
+                  </View>
+                  <View
+                    style={[
+                      styles.cell,
+                      {
+                        borderRightWidth: 0,
+                      },
+                    ]}
+                  >
+                    <Text>{controlParameters.powerConsumption} [kW]</Text>
+                  </View>
+                  <View
+                    style={[
+                      styles.cell,
+                      {
+                        backgroundColor: "white",
+                        borderRightWidth: 0,
+                      },
+                    ]}
+                  >
+                    {farmName != null && <Text>{farmName.toUpperCase()}</Text>}
+                    {farmName == null && <Text>{farmId}</Text>}
+                  </View>
+                  <View
+                    style={[
+                      styles.cell,
+                      {
+                        borderRightWidth: 0,
+                      },
+                    ]}
+                  >
+                    <Text>
+                      {creationDate
+                        .split("T")[0]
+                        .replace("-", "/")
+                        .replace("-", "/")}
+                    </Text>
+                  </View>
                 </View>
               </View>
             </View>
           </View>
         </View>
-      </View>
+      </LinearGradient>
     </View>
-
-    //farmName, deviceName, ipAddress, isOn, workingHours, powerConsumption, min hysteresis, max hysteresis
   );
 }

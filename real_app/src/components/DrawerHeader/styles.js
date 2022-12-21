@@ -8,7 +8,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "center",
-    borderBottomWidth: 1,
+    // borderBottomWidth: 1,
     borderTopLeftRadius: 0,
     borderTopRightRadius: 0,
     backgroundColor: "#93A661",
@@ -20,7 +20,7 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignContent: "center",
     alignItems: "center",
-    // color: "white",
+    color: "white",
   },
   icon: {
     position: "absolute",

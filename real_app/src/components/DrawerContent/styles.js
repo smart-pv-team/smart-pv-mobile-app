@@ -6,20 +6,18 @@ const styles = StyleSheet.create({
     alignItems: "center",
     paddingBottom: 12,
     paddingTop: 10,
-    // backgroundColor: "#EBF8FF",
-    // backgroundColor: "#93A661",
-    backgroundColor: AppStyles.color.primaryColor,
   },
   profileImage: {
-    width: 150,
-    height: 150,
-    borderRadius: 150 / 2,
-    borderWidth: 1.5,
+    width: 130,
+    height: 130,
+    borderRadius: 130 / 2,
+    borderWidth: 1,
     borderColor: "black",
   },
   profileText: {
     fontSize: 15,
     paddingTop: 10,
+    color: "white",
   },
   settingsLabel: {
     flex: 1,
@@ -30,11 +28,13 @@ const styles = StyleSheet.create({
     left: 10,
     bottom: 15,
     right: 10,
-    backgroundColor: "#F5F5F5",
+    // backgroundColor: "#F5F5F5",
+    backgroundColor: "#191919",
   },
   settingText: {
     paddingLeft: 25,
     fontSize: 14,
+    color: "white",
   },
 });
 

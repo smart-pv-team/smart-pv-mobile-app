@@ -1,10 +1,12 @@
+import { LinearGradient } from "expo-linear-gradient";
 import { View, Image, Text } from "react-native";
 import AppStyles from "../../AppStyles";
 import styles from "./styles";
 
 export default function MeasuringDeviceMin({
   deviceName,
-  deviceStatus,
+  // deviceStatus,
+  deviceModel,
   production,
 }) {
   const renderStatus = () => {
@@ -22,37 +24,34 @@ export default function MeasuringDeviceMin({
           source={require("../../../assets/temporaryMeter.png")}
         />
       </View>
-      <View
-        style={[
-          styles.minorContainer,
-          {
-            flexDirection: "column",
-            height: "100%",
-            flex: 1.5,
-          },
-        ]}
+
+      <LinearGradient
+        style={{ flex: 2 }}
+        colors={["#227BEA", "#459FF0"]}
+        start={{ x: 0, y: 0.5 }}
+        end={{ x: 1, y: 0.5 }}
       >
-        <View style={{ flex: 5, justifyContent: "flex-end" }}>
-          <Text style={{ fontSize: 20 }}>{production} kWh</Text>
+        <View
+          style={[
+            styles.minorContainer,
+            {
+              flexDirection: "column",
+              height: "100%",
+              flex: 2.5,
+              // backgroundColor: AppStyles.color.primaryColor,
+            },
+          ]}
+        >
+          <View style={{ flex: 5, justifyContent: "flex-end" }}>
+            <Text style={{ fontSize: 20, color: "white" }}>
+              {(production / 1000).toFixed(2)} kW
+            </Text>
+          </View>
+          <View style={{ flex: 4, justifyContent: "center" }}>
+            <Text style={{ fontSize: 15, color: "white" }}>{deviceName}</Text>
+          </View>
         </View>
-        <View style={{ flex: 4, justifyContent: "center" }}>
-          <Text style={{ fontSize: 15 }}>{deviceName}</Text>
-        </View>
-      </View>
-      <View style={{ flex: 0.3 }} />
-      <View
-        style={[
-          styles.minorContainer,
-          {
-            flex: 0.7,
-            backgroundColor: AppStyles.color.primaryColor,
-          },
-        ]}
-      >
-        <View style={{ flex: 1, justifyContent: "center" }}>
-          {renderStatus()}
-        </View>
-      </View>
+      </LinearGradient>
     </View>
   );
 }

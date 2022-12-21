@@ -1,5 +1,6 @@
 import { StatusBar } from "expo-status-bar";
 import React, { useState } from "react";
+import AppStyles from "../../AppStyles";
 import {
   View,
   Text,
@@ -8,6 +9,8 @@ import {
   TextInput,
   KeyboardAvoidingView,
 } from "react-native";
+import { LinearGradient } from "expo-linear-gradient";
+// import global from "../../global.js";
 
 import styles from "./styles";
 
@@ -20,7 +23,7 @@ export default function LoginScreen() {
       <View style={{ flex: 1 }}>
         <KeyboardAvoidingView style={styles.appLogoContainer}>
           <Image
-            source={require("../../../assets/favicon.png")}
+            source={require("../../../assets/green_energy.png")}
             style={styles.appLogo}
           />
         </KeyboardAvoidingView>
@@ -41,6 +44,7 @@ export default function LoginScreen() {
           ></TextInput>
           <View style={{ padding: 2 }} />
           <TextInput
+            secureTextEntry={true}
             style={styles.inputField}
             placeholder="Password"
             onChangeText={(passwd) => {
@@ -48,8 +52,29 @@ export default function LoginScreen() {
             }}
           ></TextInput>
         </View>
-        <TouchableOpacity style={styles.loginButton}>
-          <Text style={{}}>LOG IN</Text>
+        <TouchableOpacity
+          style={styles.loginButton}
+          onPress={() => {
+            console.log(global.isSignedIn);
+            global.isSignedIn = true;
+            console.log(global.isSignedIn);
+          }}
+        >
+          <LinearGradient
+            // style={{ flex: 2, width: "100%", alignItems: "center" }}
+            colors={["#227BEA", "#459FF0"]}
+            start={{ x: 0, y: 0.5 }}
+            end={{ x: 1, y: 0.5 }}
+            // style={{
+            //   flex: 1,
+            //   width: "100%",
+            //   overflow: "hidden",
+            //   borderRadius: 9,
+            // }}
+            style={[styles.loginButton, { marginTop: 0 }]}
+          >
+            <Text style={{ color: "white" }}>LOG IN</Text>
+          </LinearGradient>
         </TouchableOpacity>
       </KeyboardAvoidingView>
     </KeyboardAvoidingView>

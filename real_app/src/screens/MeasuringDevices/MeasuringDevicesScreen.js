@@ -66,7 +66,8 @@ export default function MeasuringDeviceScreen({ navigation }) {
             >
               <MeasuringDeviceMin
                 deviceName={item.name}
-                deviceStatus={item.name}
+                // deviceStatus={item.name}
+                deviceModel={item.deviceModel}
                 production={item.measuredEnergy}
               />
               {/* </View> */}

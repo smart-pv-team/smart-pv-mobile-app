@@ -14,7 +14,8 @@ const styles = StyleSheet.create({
     borderColor: "#333",
     borderColor: "#d9d9d9",
     borderWidth: 1.5,
-    backgroundColor: AppStyles.color.secondaryColor,
+    // backgroundColor: AppStyles.color.secondaryColor,
+    // backgroundColor: AppStyles.color.primaryColor,
   },
   deviceInfo: {
     flex: 1,
@@ -25,7 +26,9 @@ const styles = StyleSheet.create({
   minorContainer: {
     height: 45,
     alignItems: "center",
-    backgroundColor: AppStyles.color.primaryColor,
+    // backgroundColor: AppStyles.color.primaryColor,
+    // backgroundColor: "#5F5F5F",
+    // backgroundColor: AppStyles.color.secondaryColor,
     // backgroundColor: "#93A661",
     width: "100%",
   },

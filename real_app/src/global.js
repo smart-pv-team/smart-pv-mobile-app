@@ -1,0 +1,1 @@
+global.isSignedIn = false;

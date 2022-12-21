@@ -2,9 +2,8 @@ import { StyleSheet } from "react-native";
 
 const AppStyles = StyleSheet.create({
   color: {
-    // primaryColor: "#78B460",
-    // primaryColor: "#94C161",
-    primaryColor: "#7EBDC2",
+    // primaryColor: "#7EBDC2",
+    primaryColor: "#227BEA",
     // secondaryColor: "#FEFAE0",
     secondaryColor: "white",
     tertiaryColor: "",

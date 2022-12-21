@@ -19,6 +19,7 @@ import {
 } from "react-native-responsive-linechart";
 import { ScrollView } from "react-native-gesture-handler";
 import styles from "./styles";
+import AppStyles from "../../AppStyles";
 
 export default function HomeScreen({ navigation }) {
   const [circleWidth, setCircleWidth] = useState();
@@ -28,11 +29,11 @@ export default function HomeScreen({ navigation }) {
     { name: "Device1", id: 1 },
     { name: "Device2", id: 2 },
     { name: "Device3", id: 3 },
-    { name: "Device4", id: 4 },
-    { name: "Device5", id: 5 },
-    { name: "Device6", id: 6 },
-    { name: "Device7", id: 7 },
-    { name: "Device8", id: 8 },
+    // { name: "Device4", id: 4 },
+    // { name: "Device5", id: 5 },
+    // { name: "Device6", id: 6 },
+    // { name: "Device7", id: 7 },
+    // { name: "Device8", id: 8 },
   ];
 
   const data1 = [
@@ -61,7 +62,7 @@ export default function HomeScreen({ navigation }) {
           <View style={styles.smallContainer}>
             <View style={styles.circle}>
               <Text style={[styles.text, { fontSize: 40, fontWeight: "" }]}>
-                2
+                3
               </Text>
             </View>
             <View style={{ paddingTop: 8 }}>
@@ -73,7 +74,7 @@ export default function HomeScreen({ navigation }) {
           <View style={styles.smallContainer}>
             <View style={styles.circle}>
               <Text style={[styles.text, { fontSize: 18, fontWeight: "600" }]}>
-                212312 kWh
+                3954,32 kW
               </Text>
             </View>
             <View style={{ paddingTop: 8 }}>
@@ -124,8 +125,8 @@ export default function HomeScreen({ navigation }) {
           <Area
             theme={{
               gradient: {
-                from: { color: "red", opacity: 0.1 },
-                to: { color: "red", opacity: 0.1 },
+                from: { color: AppStyles.color.primaryColor, opacity: 0.75 },
+                to: { color: AppStyles.color.primaryColor, opacity: 0.1 },
               },
             }}
             data={data1}
@@ -133,7 +134,9 @@ export default function HomeScreen({ navigation }) {
           <Line
             data={data1}
             smoothing="none"
-            theme={{ stroke: { color: "red", width: 1 } }}
+            theme={{
+              stroke: { color: AppStyles.color.primaryColor, width: 1 },
+            }}
           />
         </Chart>
         <Text style={styles.chartTitle}>Total measurements</Text>
