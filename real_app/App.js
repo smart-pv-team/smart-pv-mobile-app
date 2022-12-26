@@ -1,18 +1,21 @@
-import React from "react";
+import React, { useState } from "react";
 import { LogBox, View, Text } from "react-native";
 import { registerRootComponent } from "expo";
 import { NavigationContainer } from "@react-navigation/native";
 import Navigator from "./src/navigation/Drawer";
+import { b, setB } from "./src/Authorization";
 // import "./src/global.js";
 
 import LoginScreen from "./src/screens/Login/LoginScreen";
 
 export default function App() {
-  // global.a = "global value";
-  global.isSignedIn = false;
+  const [isSignedIn, setIsSignedIn] = useState(false);
   return (
     <NavigationContainer>
-      <Navigator />
+      {isSignedIn && (
+        <Navigator isSignedIn={isSignedIn} setIsSignedIn={setIsSignedIn} />
+      )}
+      {!isSignedIn && <LoginScreen setIsSignedIn={setIsSignedIn} />}
     </NavigationContainer>
   );
 }

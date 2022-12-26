@@ -11,15 +11,11 @@ import { LinearGradient } from "expo-linear-gradient";
 import styles from "./styles";
 import AppStyles from "../../AppStyles";
 
-export default function CustomDrawerContent(props) {
+export default function CustomDrawerContent({ props, setIsSignedIn }) {
+  console.log(props);
+  console.log(setIsSignedIn);
   return (
     <View style={{ flex: 1 }}>
-      {/* <LinearGradient
-        style={styles.header}
-        colors={["#227BEA", "#459FF0"]}
-        start={{ x: 0.5, y: 0 }}
-        end={{ x: 0.5, y: 1 }}
-      > */}
       <LinearGradient
         style={{ flex: 1 }}
         colors={["#404040", "#1F1F1F"]}
@@ -33,18 +29,7 @@ export default function CustomDrawerContent(props) {
           />
           <Text style={styles.profileText}>Adam</Text>
         </View>
-        {/* </LinearGradient> */}
-        {/* <LinearGradient
-        style={{ flex: 1 }}
-        colors={["#404040", "#1F1F1F"]}
-        start={{ x: 0.5, y: 0 }}
-        end={{ x: 0.5, y: 1 }}
-      > */}
-        <DrawerContentScrollView
-          {...props}
-          // style={{ backgroundColor: AppStyles.color.secondaryColor }}
-          // style={{ backgroundColor: "#3D3D44" }}
-        >
+        <DrawerContentScrollView {...props}>
           <DrawerItemList {...props} />
         </DrawerContentScrollView>
         <View style={styles.settingsLabel}>
@@ -54,6 +39,9 @@ export default function CustomDrawerContent(props) {
               alignItems: "center",
               width: "100%",
               paddingLeft: 2,
+            }}
+            onPress={() => {
+              setIsSignedIn(false);
             }}
           >
             <Entypo

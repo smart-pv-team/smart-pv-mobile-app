@@ -14,7 +14,7 @@ import { LinearGradient } from "expo-linear-gradient";
 
 import styles from "./styles";
 
-export default function LoginScreen() {
+export default function LoginScreen({ setIsSignedIn }) {
   const [login, setLogin] = useState("");
   const [password, setPassword] = useState("");
 
@@ -55,9 +55,7 @@ export default function LoginScreen() {
         <TouchableOpacity
           style={styles.loginButton}
           onPress={() => {
-            console.log(global.isSignedIn);
-            global.isSignedIn = true;
-            console.log(global.isSignedIn);
+            setIsSignedIn(true);
           }}
         >
           <LinearGradient
