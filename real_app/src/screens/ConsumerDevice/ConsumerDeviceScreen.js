@@ -350,7 +350,7 @@ export default function ConsumerDeviceScreen({ route, navigation }) {
                       },
                     ]}
                   >
-                    <Text>{controlParameters.powerConsumption} [kW]</Text>
+                    <Text>{controlParameters.powerConsumption} [kWh]</Text>
                   </View>
                   <View
                     style={[

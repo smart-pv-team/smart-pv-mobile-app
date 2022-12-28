@@ -347,7 +347,7 @@ export default function ConsumerDeviceScreen({ route, navigation }) {
                     ]}
                   >
                     <Text>
-                      {(latestMeasurement / 1000).toFixed(2) || ""} [kW]
+                      {(latestMeasurement / 1000).toFixed(2) || ""} [kWh]
                     </Text>
                   </View>
                   <View
@@ -359,7 +359,7 @@ export default function ConsumerDeviceScreen({ route, navigation }) {
                       },
                     ]}
                   >
-                    <Text>{(measuredEnergy / 1000).toFixed(2)} [kW]</Text>
+                    <Text>{(measuredEnergy / 1000).toFixed(2)} [kWh]</Text>
                   </View>
                   <View
                     style={[

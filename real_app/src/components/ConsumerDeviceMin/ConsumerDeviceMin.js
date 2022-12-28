@@ -38,7 +38,7 @@ export default function ConsumerDeviceMin({
                 : deviceName}
             </Text>
             <Text style={{ fontSize: 20, paddingTop: 10, color: "white" }}>
-              {powerConsumption} kW
+              {powerConsumption} kWh
             </Text>
           </View>
         </LinearGradient>

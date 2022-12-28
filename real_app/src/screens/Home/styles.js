@@ -7,14 +7,22 @@ const styles = StyleSheet.create({
   },
   upperContainer: {
     flex: 2,
+  },
+  upperSmall: {
+    flex: 1,
     flexDirection: "row",
   },
-  twoSmaller: {
-    flex: 1,
-  },
-  oneTall: {
-    flex: 1,
-  },
+  lowerSmall: { flex: 1 },
+  // upperContainer: {
+  //   flex: 2,
+  //   flexDirection: "row",
+  // },
+  // twoSmaller: {
+  //   flex: 1,
+  // },
+  // oneTall: {
+  //   flex: 1,
+  // },
   lowerContainer: {
     flex: 1,
     backgroundColor: "purple",
@@ -53,6 +61,19 @@ const styles = StyleSheet.create({
     borderColor: "#d9d9d9",
     backgroundColor: "white",
     alignItems: "center",
+    justifyContent: "center",
+    overflow: "hidden",
+  },
+  longContainer: {
+    flex: 1,
+    flexDirection: "row",
+    borderRadius: 15,
+    margin: 7,
+    borderWidth: 1.5,
+    borderColor: "#d9d9d9",
+    backgroundColor: "white",
+    alignItems: "center",
+    justifyContent: "center",
     overflow: "hidden",
   },
   containerTitle: { height: "10%", paddingTop: 8 },

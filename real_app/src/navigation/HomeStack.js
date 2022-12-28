@@ -36,6 +36,16 @@ export default function HomeStack() {
       >
         {(props) => <ConsumerDevicesScreen {...props} onlyActive={true} />}
       </Stack.Screen>
+      <Stack.Screen
+        name="AllDevices"
+        options={{
+          header: ({ navigation }) => (
+            <StackHeader navigation={navigation} name="Consumer Devices" />
+          ),
+        }}
+      >
+        {(props) => <ConsumerDevicesScreen {...props} onlyActive={false} />}
+      </Stack.Screen>
     </Stack.Navigator>
   );
 }

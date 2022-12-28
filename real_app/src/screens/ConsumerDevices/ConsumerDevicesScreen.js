@@ -55,27 +55,38 @@ export default function ConsumerDevicesScreen({ navigation, onlyActive }) {
 
   return (
     <View style={{ flex: 1 }}>
-      <View style={{ height: 6 }} />
-      <FlatList
-        data={devices}
-        numColumns={2}
-        renderItem={({ item }) => (
-          <TouchableOpacity
-            style={{ width: "50%" }}
-            onPress={() => {
-              navigation.navigate("ConsumerDevice", item);
-            }}
-          >
-            <ConsumerDeviceMin
-              deviceStatus={item.isOn}
-              deviceName={item.name}
-              powerConsumption={item.controlParameters.powerConsumption}
-              style={{}}
-            />
-          </TouchableOpacity>
-        )}
-        overScrollMode={"never"}
-      />
+      {devices.length != 0 && (
+        <FlatList
+          style={{ paddingTop: 6 }}
+          data={devices}
+          numColumns={2}
+          renderItem={({ item }) => (
+            <TouchableOpacity
+              style={{ width: "50%" }}
+              onPress={() => {
+                navigation.navigate("ConsumerDevice", item);
+              }}
+            >
+              <ConsumerDeviceMin
+                deviceStatus={item.isOn}
+                deviceName={item.name}
+                powerConsumption={item.controlParameters.powerConsumption}
+                style={{}}
+              />
+            </TouchableOpacity>
+          )}
+          overScrollMode={"never"}
+        />
+      )}
+      {devices.length == 0 && onlyActive && (
+        <View
+          style={{ flex: 1, justifyContent: "center", alignItems: "center" }}
+        >
+          <Text style={{ fontSize: 20, color: "#A2A2A2", paddingBottom: 100 }}>
+            No active devices
+          </Text>
+        </View>
+      )}
     </View>
   );
 }

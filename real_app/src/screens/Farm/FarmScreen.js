@@ -108,7 +108,7 @@ export default function FarmScreen({ route, navigation }) {
                     { backgroundColor: AppStyles.color.secondaryColor },
                   ]}
                 >
-                  <Text>{farm["energyLimit"]} [kW]</Text>
+                  <Text>{farm["energyLimit"]} [kWh]</Text>
                 </View>
                 <View style={[styles.cell, { borderRightWidth: 0 }]}>
                   <Text>{farm["algorithmType"].replace("_", " ")}</Text>

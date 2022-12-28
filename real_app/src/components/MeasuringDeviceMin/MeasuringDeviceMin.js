@@ -44,7 +44,7 @@ export default function MeasuringDeviceMin({
         >
           <View style={{ flex: 5, justifyContent: "flex-end" }}>
             <Text style={{ fontSize: 20, color: "white" }}>
-              {(production / 1000).toFixed(2)} kW
+              {(production / 1000).toFixed(2)} kWh
             </Text>
           </View>
           <View style={{ flex: 4, justifyContent: "center" }}>

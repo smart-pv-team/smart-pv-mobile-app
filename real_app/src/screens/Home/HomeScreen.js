@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useLayoutEffect } from "react";
 import {
   Text,
   View,
@@ -22,19 +22,13 @@ import styles from "./styles";
 import AppStyles from "../../AppStyles";
 
 export default function HomeScreen({ navigation }) {
-  const [circleWidth, setCircleWidth] = useState();
-  const [circleHeight, setCircleHeight] = useState();
-
-  const activeDevices = [
-    { name: "Device1", id: 1 },
-    { name: "Device2", id: 2 },
-    { name: "Device3", id: 3 },
-    // { name: "Device4", id: 4 },
-    // { name: "Device5", id: 5 },
-    // { name: "Device6", id: 6 },
-    // { name: "Device7", id: 7 },
-    // { name: "Device8", id: 8 },
-  ];
+  const [production, setProduction] = useState(0);
+  const [activeDevicesNum, setActiveDevicesNum] = useState(0);
+  const [devicesNum, setDevicesNum] = useState(0);
+  const [workingHours, setWorkingHours] = useState(0);
+  const promises = [];
+  var tempDevices = [];
+  var tempHours = 0;
 
   const data1 = [
     { x: -2, y: 1 },
@@ -45,24 +39,160 @@ export default function HomeScreen({ navigation }) {
     { x: 10, y: 1 },
   ];
 
-  const renderDevice = ({ item }) => {
-    const backgroundColor = item.id % 2 == 1 ? "#f7f7f7" : "white";
-    return (
-      <View style={[styles.infoItem, { backgroundColor: backgroundColor }]}>
-        <Text>{item.name}</Text>
-      </View>
-    );
+  const asyncGetDevice = (deviceId) => {
+    return new Promise((resolve) => {
+      fetch(`https://smart-pv.herokuapp.com/consumption/devices/${deviceId}`, {
+        method: "GET",
+      })
+        .then((response) => response.json())
+        .then((responseJson) => {
+          tempDevices.push(responseJson);
+          // console.log(responseJson);
+          tempHours += responseJson["workingHours"];
+        })
+        .then(() => {
+          resolve();
+        });
+    });
   };
+
+  const fetchData = async () => {
+    const farmResponse = await fetch(
+      "https://smart-pv.herokuapp.com/management/farms",
+      { method: "GET" }
+    );
+    const farmId = await farmResponse.json();
+
+    const productionResponse = await fetch(
+      `https://smart-pv.herokuapp.com/measurement/farms/${farmId}/statistics/sum`,
+      { method: "GET" }
+    );
+
+    const production = await productionResponse.json();
+    setProduction(production);
+
+    const devicesIdResponse = await fetch(
+      `https://smart-pv.herokuapp.com/consumption/devices`,
+      { method: "GET" }
+    );
+
+    const deviceIds = await devicesIdResponse.json();
+
+    for (var i = 0; i < deviceIds.length; i++) {
+      promises.push(asyncGetDevice(deviceIds[i]));
+    }
+
+    tempHours = 0;
+    Promise.all(promises).then(() => {
+      setActiveDevicesNum(tempDevices.filter((x) => x.isOn).length);
+      setWorkingHours(tempHours);
+    });
+
+    setDevicesNum(deviceIds.length);
+  };
+
+  useLayoutEffect(() => {
+    fetchData();
+  }, []);
 
   return (
     <View style={styles.container}>
       <StatusBar></StatusBar>
       <View style={styles.upperContainer}>
+        <View style={styles.upperSmall}>
+          <TouchableOpacity
+            style={styles.smallContainer}
+            onPress={() => {
+              navigation.navigate("ActiveDevices");
+            }}
+          >
+            <View style={styles.circle}>
+              <Text style={[styles.text, { fontSize: 40, fontWeight: "" }]}>
+                {activeDevicesNum}
+              </Text>
+            </View>
+            <View style={{ paddingTop: 8 }}>
+              <Text style={[styles.text, { fontSize: 18, fontWeight: "" }]}>
+                Active devices
+              </Text>
+            </View>
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={styles.smallContainer}
+            onPress={() => {
+              navigation.navigate("AllDevices");
+            }}
+          >
+            <View style={styles.circle}>
+              <Text style={[styles.text, { fontSize: 40, fontWeight: "" }]}>
+                {devicesNum}
+              </Text>
+            </View>
+            <View style={{ paddingTop: 8 }}>
+              <Text style={[styles.text, { fontSize: 18, fontWeight: "" }]}>
+                All devices
+              </Text>
+            </View>
+          </TouchableOpacity>
+        </View>
+        <View style={styles.lowerSmall}>
+          <View style={styles.longContainer}>
+            <View
+              style={{
+                flex: 1,
+                justifyContent: "center",
+                alignItems: "center",
+              }}
+            >
+              <View
+                style={[
+                  styles.circle,
+                  { height: 140, width: 140, borderRadius: 70 },
+                ]}
+              >
+                <Text
+                  style={[styles.text, { fontSize: 16, fontWeight: "600" }]}
+                >
+                  {(production / 1000).toFixed(2)} kWh
+                </Text>
+              </View>
+              <View style={{ paddingTop: 8 }}>
+                <Text style={[styles.text, { fontSize: 18, fontWeight: "" }]}>
+                  Total production
+                </Text>
+              </View>
+            </View>
+            <View
+              style={{
+                flex: 1,
+                justifyContent: "center",
+                alignItems: "center",
+              }}
+            >
+              <View
+                style={[
+                  styles.circle,
+                  { height: 140, width: 140, borderRadius: 70 },
+                ]}
+              >
+                <Text style={[styles.text, { fontSize: 30, fontWeight: "" }]}>
+                  {workingHours}
+                </Text>
+              </View>
+              <View style={{ paddingTop: 8 }}>
+                <Text style={[styles.text, { fontSize: 18, fontWeight: "" }]}>
+                  Total hours
+                </Text>
+              </View>
+            </View>
+          </View>
+        </View>
+      </View>
+      {/* <View style={styles.upperContainer}>
         <View style={styles.twoSmaller}>
           <TouchableOpacity
             style={styles.smallContainer}
             onPress={() => {
-              console.log("lala");
               navigation.navigate("ActiveDevices");
             }}
           >
@@ -106,7 +236,7 @@ export default function HomeScreen({ navigation }) {
             </View>
           </View>
         </View>
-      </View>
+      </View> */}
       <View style={styles.lowerContainer}>
         <Chart
           viewport={{ size: { width: 10 } }}
