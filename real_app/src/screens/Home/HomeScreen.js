@@ -59,7 +59,13 @@ export default function HomeScreen({ navigation }) {
       <StatusBar></StatusBar>
       <View style={styles.upperContainer}>
         <View style={styles.twoSmaller}>
-          <View style={styles.smallContainer}>
+          <TouchableOpacity
+            style={styles.smallContainer}
+            onPress={() => {
+              console.log("lala");
+              navigation.navigate("ActiveDevices");
+            }}
+          >
             <View style={styles.circle}>
               <Text style={[styles.text, { fontSize: 40, fontWeight: "" }]}>
                 3
@@ -70,7 +76,7 @@ export default function HomeScreen({ navigation }) {
                 Active devices
               </Text>
             </View>
-          </View>
+          </TouchableOpacity>
           <View style={styles.smallContainer}>
             <View style={styles.circle}>
               <Text style={[styles.text, { fontSize: 18, fontWeight: "600" }]}>

@@ -11,9 +11,9 @@ import {
 import ConsumerDeviceMin from "../../components/ConsumerDeviceMin/ConsumerDeviceMin";
 import styles from "./styles";
 
-export default function ConsumerDevicesScreen({ navigation }) {
+export default function ConsumerDevicesScreen({ navigation, onlyActive }) {
   const [devices, setDevices] = useState([]);
-  const tempDevices = [];
+  var tempDevices = [];
   const promises = [];
 
   const asyncGetDevice = (deviceId) => {
@@ -42,6 +42,9 @@ export default function ConsumerDevicesScreen({ navigation }) {
     }
 
     Promise.all(promises).then(() => {
+      if (onlyActive) {
+        tempDevices = tempDevices.filter((x) => x.isOn);
+      }
       setDevices(tempDevices);
     });
   };

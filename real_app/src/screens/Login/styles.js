@@ -4,38 +4,46 @@ import AppStyles from "../../AppStyles";
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: "center",
     alignItems: "center",
-    // backgroundColor: "pink",
   },
   inputField: {
     backgroundColor: "#f0f0f0",
     borderRadius: 50,
     paddingLeft: 10,
-    // paddingVertical:
   },
-  appLogoContainer: {
-    height: 100,
-    width: 100,
-    flex: 1,
-    // backgroundColor: "red",
-  },
+  // appLogoContainer: {
+  //   alignItems: "center",
+  //   // flex: 1,
+  //   height: 100,
+  //   width: 100,
+  // },
   appLogo: {
-    flex: 1,
-    width: undefined,
-    height: undefined,
-    resizeMode: "contain",
+    // marginTop: 200,
+    height: 130,
+    width: 130,
+    // flex: 1,
     // backgroundColor: "red",
+    resizeMode: "contain",
   },
-  appLogoView: {},
+  appName: {
+    justifyContent: "center",
+    alignItems: "center",
+    paddingTop: 10,
+    // flex: 1,
+  },
+  incorrectAuth: {
+    height: 20,
+    marginTop: 20,
+    justifyContent: "center",
+    alignItems: "center",
+  },
   loginButton: {
-    width: 300,
+    width: "80%",
     borderRadius: 25,
     height: 50,
     alignItems: "center",
     justifyContent: "center",
-    marginTop: 40,
-    // backgroundColor: "#FF1493",
+    marginTop: 20,
     backgroundColor: AppStyles.color.primaryColor,
   },
 });

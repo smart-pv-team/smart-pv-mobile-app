@@ -42,8 +42,6 @@ export default function FarmScreen({ route, navigation }) {
 
     const farmsIds = await farmsResponse.json();
 
-    console.log(farmsIds[0]);
-
     fetchFarm(farmsIds[0]);
   };
 

@@ -12,8 +12,6 @@ import styles from "./styles";
 import AppStyles from "../../AppStyles";
 
 export default function CustomDrawerContent({ props, setIsSignedIn }) {
-  console.log(props);
-  console.log(setIsSignedIn);
   return (
     <View style={{ flex: 1 }}>
       <LinearGradient

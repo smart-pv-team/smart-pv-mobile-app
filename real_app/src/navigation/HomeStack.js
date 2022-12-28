@@ -1,8 +1,10 @@
 import { createStackNavigator } from "@react-navigation/stack";
 import HomeScreen from "../screens/Home/HomeScreen";
 import DrawerHeader from "../components/DrawerHeader/DrawerHeader";
+import StackHeader from "../components/StackHeader/StackHeader";
 import React from "react";
 import AppStyles from "../AppStyles";
+import ConsumerDevicesScreen from "../screens/ConsumerDevices/ConsumerDevicesScreen";
 
 const Stack = createStackNavigator();
 
@@ -24,27 +26,16 @@ export default function HomeStack() {
           ),
         }}
       />
+      <Stack.Screen
+        name="ActiveDevices"
+        options={{
+          header: ({ navigation }) => (
+            <StackHeader navigation={navigation} name="Active Devices" />
+          ),
+        }}
+      >
+        {(props) => <ConsumerDevicesScreen {...props} onlyActive={true} />}
+      </Stack.Screen>
     </Stack.Navigator>
   );
 }
-
-// const screens = {
-//   Home: {
-//     screen: HomeScreen,
-//     navigationOptions: ({ navigation }) => {
-//       return {
-//         headerTitle: () => (
-//           <Header
-//             navigation={navigation}
-//             title="Home"
-//             showSettingsIcon={false}
-//           />
-//         ),
-//       };
-//     },
-//   },
-// };
-
-// const HomeStack = createStackNavigator(screens);
-
-// export default HomeStack;

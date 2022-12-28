@@ -18,13 +18,15 @@ export default function ConsumerDevicesStack() {
           },
         }}
         name="ConsumerDevicesScreen"
-        component={ConsumerDevicesScreen}
+        // component={ConsumerDevicesScreen}
         options={{
           header: ({ navigation }) => (
             <DrawerHeader navigation={navigation} name="Consumer Devices" />
           ),
         }}
-      />
+      >
+        {(props) => <ConsumerDevicesScreen {...props} onlyActive={false} />}
+      </Stack.Screen>
       <Stack.Screen
         name="ConsumerDevice"
         options={{
