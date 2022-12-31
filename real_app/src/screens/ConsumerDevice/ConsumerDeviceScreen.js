@@ -17,6 +17,8 @@ export default function ConsumerDeviceScreen({ route, navigation }) {
   const [activityMeasurements, setActivityMeasurements] = useState([
     { x: 0, y: 0 },
   ]);
+  const [chartState, setChartState] = useState(0);
+  const [chartName, setChartName] = useState("Device activity");
   const [yLabels, setYLabels] = useState(["OFF", "ON"]);
   const [xLabels, setXLabels] = useState([1]);
   const [yDomain, setYDomain] = useState({ min: 0, max: 1.25 });
@@ -26,7 +28,6 @@ export default function ConsumerDeviceScreen({ route, navigation }) {
   const [viewportWidth, setViewportWidth] = useState(7);
   const [horizontalTickValues, setHorizontalTickValues] = useState([]);
   const [verticalTickValues, setVerticalTickValues] = useState([0, 1]);
-  const [verticalTickCount, setVerticalTickCount] = useState(2);
   var dates = [];
 
   var promises = [];
@@ -40,24 +41,6 @@ export default function ConsumerDeviceScreen({ route, navigation }) {
   var fromDate = new Date(toDate);
   fromDate.setDate(fromDate.getDate() - 7);
 
-  const chartData = [
-    { x: 0, y: 1 },
-    { x: 0, y: 0 },
-    { x: 1, y: 0 },
-    { x: 3, y: 0 },
-    { x: 3, y: 1 },
-    { x: 8, y: 1 },
-    { x: 8, y: 0 },
-    { x: 9, y: 0 },
-    { x: 9, y: 1 },
-    { x: 10, y: 1 },
-    { x: 15, y: 1 },
-    { x: 15, y: 0 },
-    { x: 20, y: 0 },
-    { x: 20, y: 1 },
-    { x: 30, y: 1 },
-  ];
-
   const {
     name,
     deviceModel,
@@ -68,24 +51,6 @@ export default function ConsumerDeviceScreen({ route, navigation }) {
     farmId,
     id,
   } = route.params;
-
-  const [labels, setLabels] = useState([
-    "January",
-    "February",
-    "March",
-    "April",
-    "May",
-    "June",
-  ]);
-
-  const [data, setData] = useState([
-    Math.random() * 100,
-    Math.random() * 100,
-    Math.random() * 100,
-    Math.random() * 100,
-    Math.random() * 100,
-    Math.random() * 100,
-  ]);
 
   const [oneWeekStyle, setOneWeekStyle] = useState({ color: "gray" });
   const [oneMonthStyle, setOneMonthStyle] = useState({ color: "black" });
@@ -129,9 +94,11 @@ export default function ConsumerDeviceScreen({ route, navigation }) {
   };
 
   const getLastDayReadings = async () => {
+    dates = [];
     var endDate = new Date();
     var startDate = new Date(endDate);
     var tempData = [{ x: 0, y: 0 }];
+    var tempHorizontalValues = [];
     var previous = false;
     startDate.setDate(startDate.getDate() - 1);
     const response = await fetch(
@@ -139,22 +106,38 @@ export default function ConsumerDeviceScreen({ route, navigation }) {
       { method: "GET" }
     );
     const responseJson = await response.json();
+    var responseEntries = Object.entries(responseJson);
+    responseEntries.sort((a, b) => (a[0] > b[0] ? 1 : -1));
 
-    for (const [index, [key, value]] of Object.entries(
-      Object.entries(responseJson)
-    )) {
-      if (previous != value) {
-        tempData.push({ x: parseInt(index), y: previous === true ? 1 : 0 });
-        tempData.push({ x: parseInt(index), y: value === true ? 1 : 0 });
+    for (let i = 0; i < responseEntries.length; i++) {
+      if (previous != responseEntries[i][1]) {
+        tempData.push({ x: i, y: previous === true ? 1 : 0 });
+        tempData.push({ x: i, y: responseEntries[i][1] === true ? 1 : 0 });
+        dates.push(
+          responseEntries[i][0].split("T")[1].split(":").slice(0, 2).join(":")
+        );
+        tempHorizontalValues.push(i);
+      } else if (i % 5 == 0) {
+        tempData.push({ x: i, y: responseEntries[i][1] === true ? 1 : 0 });
+        dates.push(
+          responseEntries[i][0].split("T")[1].split(":").slice(0, 2).join(":")
+        );
+        tempHorizontalValues.push(i);
       }
-      previous = value;
+      previous = responseEntries[i][1];
     }
-    console.log(tempData.length);
     setActivityMeasurements(tempData);
+    setXLabels(dates);
+    setHorizontalTickValues(tempHorizontalValues);
+    setVerticalTickValues([0, 1]);
+    setYLabels(["OFF", "ON"]);
+    setYDomain({ min: 0, max: 1.25 });
+    setXDomain({ min: 0, max: 720 });
+    setViewportWidth(20);
+    setChartName("Device activity");
   };
 
   const asyncGetDayReading = (fromD, toD, iterId) => {
-    console.log(fromDate, toDate);
     return new Promise((resolve) => {
       fetch(
         `https://smart-pv.herokuapp.com/consumption/farms/${
@@ -164,7 +147,6 @@ export default function ConsumerDeviceScreen({ route, navigation }) {
       )
         .then((response) => response.json())
         .then((responseJson) => {
-          console.log(responseJson);
           if (responseJson > maxY) maxY = responseJson;
           tempReadings.push({ x: iterId, y: 0 });
           tempReadings.push({ x: iterId, y: responseJson });
@@ -211,6 +193,7 @@ export default function ConsumerDeviceScreen({ route, navigation }) {
       setVerticalTickValues(tempArr);
       setYLabels(tempArr);
       setXLabels(dates);
+      setChartName("Device activity (minutes)");
     });
   };
 
@@ -222,20 +205,12 @@ export default function ConsumerDeviceScreen({ route, navigation }) {
   return (
     <View style={styles.container}>
       <StatusBar />
-      {/* <LinearGradient
-        colors={["white", "#969696"]}
-        start={{ x: 0.5, y: 0 }}
-        end={{ x: 0.5, y: 1 }}
-        style={{ flex: 1, width: "100%" }}
-      > */}
       <View style={styles.graph}>
         <Chart
           viewport={{ size: { width: viewportWidth } }}
           style={{ height: 260, width: "100%" }}
           xDomain={xDomain}
           yDomain={yDomain}
-          // xLabels={"jan"}
-          // yLabels={yLabels}
           padding={{ left: 25, top: 10, bottom: 20, right: 20 }}
         >
           <VerticalAxis
@@ -257,7 +232,10 @@ export default function ConsumerDeviceScreen({ route, navigation }) {
               ticks: { stroke: { color: "#aaa", width: 2 } },
               labels: {
                 label: { rotation: 0 },
-                formatter: (v) => xLabels[v.toFixed(0)],
+                formatter: (v) => {
+                  if (chartState != 0) return xLabels[v.toFixed(0)];
+                  return xLabels[Math.floor(v.toFixed(0) / 5) + 1];
+                },
               },
             }}
           />
@@ -276,13 +254,8 @@ export default function ConsumerDeviceScreen({ route, navigation }) {
             smoothing="none"
             theme={{ stroke: { color: "#227BEA", width: 1 } }}
           />
-          {/* <Line
-            data={data2}
-            smoothing="cubic-spline"
-            theme={{ stroke: { color: "blue", width: 1 } }}
-          /> */}
         </Chart>
-        <Text style={styles.chartTitle}>Device activity</Text>
+        <Text style={styles.chartTitle}>{chartName}</Text>
       </View>
       <LinearGradient
         colors={[AppStyles.color.backgroundColor, "#969696"]}
@@ -315,12 +288,9 @@ export default function ConsumerDeviceScreen({ route, navigation }) {
                   oneWeekBorder,
                 ]}
                 onPress={async () => {
+                  setChartState(0);
                   updateButtonStyle(0);
-                  await getLastDayReadings();
-                  setVerticalTickValues([0, 1]);
-                  // setVerticalTickCount(2);
-                  setYLabels(["OFF", "ON"]);
-                  setYDomain({ min: 0, max: 1.25 });
+                  getLastDayReadings();
                 }}
               >
                 <Text style={oneWeekStyle}>1 DAY</Text>
@@ -334,6 +304,7 @@ export default function ConsumerDeviceScreen({ route, navigation }) {
                   oneMonthBorder,
                 ]}
                 onPress={async () => {
+                  setChartState(1);
                   updateButtonStyle(1);
                   await getReadingsByDay(7);
                   setXDomain({ min: 0, max: 7 });
@@ -357,6 +328,7 @@ export default function ConsumerDeviceScreen({ route, navigation }) {
                   threeMonthsBorder,
                 ]}
                 onPress={async () => {
+                  setChartState(2);
                   updateButtonStyle(2);
                   await getReadingsByDay(30);
                   setXDomain({ min: 0, max: 30 });
@@ -440,7 +412,6 @@ export default function ConsumerDeviceScreen({ route, navigation }) {
                           .replace("-", "/")}
                       </Text>
                     )}
-                    {/* <Text>{latestMeasurement || ""}</Text> */}
                   </View>
                   <View
                     style={[
