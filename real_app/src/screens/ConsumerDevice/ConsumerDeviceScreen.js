@@ -14,9 +14,33 @@ import styles from "./styles";
 
 export default function ConsumerDeviceScreen({ route, navigation }) {
   const [farmName, setFarmName] = useState("");
-  const [activityMeasurement, setActivityMeasurements] = useState([]);
+  const [activityMeasurements, setActivityMeasurements] = useState([
+    { x: 0, y: 0 },
+  ]);
+  const [yLabels, setYLabels] = useState(["OFF", "ON"]);
+  const [xLabels, setXLabels] = useState([1]);
+  const [yDomain, setYDomain] = useState({ min: 0, max: 1.05 });
+  const [xDomain, setXDomain] = useState({ min: 0, max: 7 });
+  var maxY = 1.05;
 
-  const data1 = [
+  const [viewportWidth, setViewportWidth] = useState(7);
+  const [horizontalTickValues, setHorizontalTickValues] = useState([]);
+  const [verticalTickValues, setVerticalTickValues] = useState([0, 1]);
+  const [verticalTickCount, setVerticalTickCount] = useState(2);
+  var dates = [];
+
+  var promises = [];
+  var tempReadings = [];
+
+  var toDate = new Date();
+  var day = toDate.getDate();
+  toDate.setDate(toDate.getDate() + 1);
+  if (toDate.getDate() === day) toDate.setDate(toDate.getDate() + 1);
+  toDate.setHours(0, 0, 0, 0);
+  var fromDate = new Date(toDate);
+  fromDate.setDate(fromDate.getDate() - 7);
+
+  const chartData = [
     { x: 0, y: 1 },
     { x: 0, y: 0 },
     { x: 1, y: 0 },
@@ -34,7 +58,6 @@ export default function ConsumerDeviceScreen({ route, navigation }) {
     { x: 30, y: 1 },
   ];
 
-  // console.log(route.params);
   const {
     name,
     deviceModel,
@@ -95,27 +118,78 @@ export default function ConsumerDeviceScreen({ route, navigation }) {
     }
   };
 
-  const yLabels = ["OFF", "ON"];
-
   const getFarmName = async () => {
     const response = await fetch(
-      `https://smart-pv.herokuapp.com/management/farms/${farmId}`,
+      `https://smart-pv.herokuapp.com/management/farms/${global.farmId}`,
       { method: "GET" }
     );
     const responseJson = await response.json();
     setFarmName(responseJson.name);
   };
 
+  const asyncGetDayReading = (fromD, toD, id) => {
+    console.log(fromDate, toDate);
+    return new Promise((resolve) => {
+      fetch(
+        `https://smart-pv.herokuapp.com/consumption/farms/${
+          global.farmId
+        }/statistics/period?startDate=${fromD.toISOString()}&endDate=${toD.toISOString()}`,
+        { method: "GET" }
+      )
+        .then((response) => response.json())
+        .then((responseJson) => {
+          console.log(responseJson);
+          if (responseJson > maxY) maxY = responseJson;
+          tempReadings.push({ x: id, y: 0 });
+          tempReadings.push({ x: id, y: responseJson });
+          tempReadings.push({ x: id + 0.5, y: responseJson });
+          tempReadings.push({ x: id + 0.5, y: 0 });
+        })
+        .then(() => resolve());
+    });
+  };
+
+  const getReadingsByDay = async (days) => {
+    tempReadings = [];
+    dates = [];
+
+    toDate = new Date();
+    var day = toDate.getDate();
+    toDate.setDate(toDate.getDate() + 1);
+    if (toDate.getDate() === day) toDate.setDate(toDate.getDate() + 1);
+    toDate.setHours(0, 0, 0, 0);
+    fromDate = new Date(toDate);
+    fromDate.setDate(toDate.getDate() - days);
+    for (let i = 0; i < days; i++) {
+      toDate = new Date(fromDate);
+      toDate.setDate(toDate.getDate() + 1);
+      promises.push(asyncGetDayReading(fromDate, toDate, i));
+      dates.push(
+        toDate
+          .toISOString()
+          .split("T")[0]
+          .split("-")
+          .slice(1, 3)
+          .reverse()
+          .join("/")
+      );
+      fromDate.setDate(fromDate.getDate() + 1);
+    }
+
+    Promise.all(promises).then(async () => {
+      setActivityMeasurements(tempReadings);
+      setYDomain({ min: 0, max: maxY + 40 });
+      var tempArr = [...Array(Math.floor(maxY) + 20).keys()]
+        .filter((x) => x % Math.floor(maxY / 10) == 0)
+        .map((x) => Math.round(x / 10) * 10);
+      setVerticalTickValues(tempArr);
+      setYLabels(tempArr);
+      setXLabels(dates);
+    });
+  };
+
   useLayoutEffect(() => {
     getFarmName();
-    console.log(
-      workingHours,
-      isOn,
-      controlParameters,
-      creationDate,
-      farmId,
-      controlParameters.lastStatusChange
-    );
   }, []);
 
   return (
@@ -129,35 +203,38 @@ export default function ConsumerDeviceScreen({ route, navigation }) {
       > */}
       <View style={styles.graph}>
         <Chart
-          viewport={{ size: { width: 10 } }}
+          viewport={{ size: { width: viewportWidth } }}
           style={{ height: 260, width: "100%" }}
-          xDomain={{ min: 0, max: 30 }}
-          yDomain={{ min: -0.05, max: 1.05 }}
-          xLabels={"jan"}
-          yLabels={["OFF", "ON"]}
+          xDomain={xDomain}
+          yDomain={yDomain}
+          // xLabels={"jan"}
+          // yLabels={yLabels}
           padding={{ left: 25, top: 10, bottom: 20, right: 20 }}
         >
           <VerticalAxis
-            tickValues={[0, 1]}
+            tickValues={verticalTickValues}
             theme={{
               labels: {
-                // label: { rotation: -20 },
-                label: { fontSize: 8, fontWeight: "500" },
-                formatter: (v) => yLabels[v],
+                label: { fontSize: 8, fontWeight: "400" },
+                formatter: (v) => {
+                  if (yLabels[0] != "OFF") return v;
+                  return yLabels[v];
+                },
               },
             }}
           />
           <HorizontalAxis
-            tickCount={3}
+            tickValues={horizontalTickValues}
             theme={{
               axis: { stroke: { color: "#aaa", width: 2 } },
               ticks: { stroke: { color: "#aaa", width: 2 } },
               labels: {
-                label: { rotation: 50 },
-                formatter: (v) => v.toFixed(1),
+                label: { rotation: 0 },
+                formatter: (v) => xLabels[v.toFixed(0)],
               },
             }}
           />
+
           <Area
             theme={{
               gradient: {
@@ -165,10 +242,10 @@ export default function ConsumerDeviceScreen({ route, navigation }) {
                 to: { color: "#227BEA", opacity: 0.1 },
               },
             }}
-            data={data1}
+            data={activityMeasurements}
           />
           <Line
-            data={data1}
+            data={activityMeasurements}
             smoothing="none"
             theme={{ stroke: { color: "#227BEA", width: 1 } }}
           />
@@ -212,11 +289,13 @@ export default function ConsumerDeviceScreen({ route, navigation }) {
                 ]}
                 onPress={() => {
                   updateButtonStyle(0);
-                  setFromDate(7, 0);
-                  getChartData();
+                  setVerticalTickValues([0, 1]);
+                  // setVerticalTickCount(2);
+                  setYLabels(["OFF", "ON"]);
+                  setYDomain({ min: 0, max: 1.05 });
                 }}
               >
-                <Text style={oneWeekStyle}>1 WEEK</Text>
+                <Text style={oneWeekStyle}>1 DAY</Text>
               </TouchableOpacity>
             </View>
             <View style={{ flex: 1 }}>
@@ -226,13 +305,17 @@ export default function ConsumerDeviceScreen({ route, navigation }) {
                   { borderWidth: 1, borderRightWidth: 0 },
                   oneMonthBorder,
                 ]}
-                onPress={() => {
+                onPress={async () => {
                   updateButtonStyle(1);
-                  setFromDate(0, 1);
-                  getChartData();
+                  await getReadingsByDay(7);
+                  setXDomain({ min: 0, max: 7 });
+                  setHorizontalTickValues(
+                    [...Array(7).keys()].map((x) => x + 0.25)
+                  );
+                  setViewportWidth(7);
                 }}
               >
-                <Text style={oneMonthStyle}>1 MONTH</Text>
+                <Text style={oneMonthStyle}>1 WEEK</Text>
               </TouchableOpacity>
             </View>
             <View style={{ flex: 1 }}>
@@ -240,19 +323,22 @@ export default function ConsumerDeviceScreen({ route, navigation }) {
                 style={[
                   styles.button,
                   {
-                    // borderLeftWidth: 0,
                     borderBottomRightRadius: 9,
                     borderTopRightRadius: 9,
                   },
                   threeMonthsBorder,
                 ]}
-                onPress={() => {
+                onPress={async () => {
                   updateButtonStyle(2);
-                  setFromDate(0, 3);
-                  getChartData();
+                  await getReadingsByDay(30);
+                  setXDomain({ min: 0, max: 30 });
+                  setHorizontalTickValues(
+                    [...Array(30).keys()].map((x) => x + 0.25)
+                  );
+                  setViewportWidth(7);
                 }}
               >
-                <Text style={threeMonthsStyle}>3 MONTHS</Text>
+                <Text style={threeMonthsStyle}>1 MONTH</Text>
               </TouchableOpacity>
             </View>
           </View>
@@ -275,8 +361,6 @@ export default function ConsumerDeviceScreen({ route, navigation }) {
                 <View
                   style={{
                     flex: 0.7,
-                    // backgroundColor: AppStyles.color.primaryColor,
-                    // backgroundColor: "#EBEBEB",
                   }}
                 >
                   <View style={[styles.cell]}>
@@ -308,7 +392,6 @@ export default function ConsumerDeviceScreen({ route, navigation }) {
                 <View
                   style={{
                     flex: 1,
-                    // backgroundColor: "#EBEBEB",
                   }}
                 >
                   <View

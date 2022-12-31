@@ -13,7 +13,7 @@ import {
 
 const LeftDrawer = createDrawerNavigator();
 
-function LeftDrawerScreen({ isSignedIn, setIsSignedIn }) {
+function LeftDrawerScreen({ isSignedIn, setIsSignedIn, farmId }) {
   return (
     <LeftDrawer.Navigator
       drawerContent={(props) => (

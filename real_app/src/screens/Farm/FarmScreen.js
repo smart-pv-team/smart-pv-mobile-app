@@ -8,22 +8,9 @@ import AppStyles from "../../AppStyles";
 export default function FarmScreen({ route, navigation }) {
   const [farm, setFarm] = useState();
 
-  const asyncGetDevice = (deviceId) => {
-    return new Promise((resolve) => {
-      fetch(`https://smart-pv.herokuapp.com/management/farms`, {
-        method: "GET",
-      })
-        .then((response) => response.json())
-        .then((responseJson) => tempDevices.push(responseJson))
-        .then(() => {
-          resolve();
-        });
-    });
-  };
-
-  const fetchFarm = async (farmId) => {
+  const fetchFarm = async () => {
     const farmResponse = await fetch(
-      `https://smart-pv.herokuapp.com/management/farms/${farmId}`,
+      `https://smart-pv.herokuapp.com/management/farms/${global.farmId}`,
       {
         method: "GET",
       }
@@ -31,22 +18,10 @@ export default function FarmScreen({ route, navigation }) {
 
     const farmJson = await farmResponse.json();
     setFarm(farmJson);
-    console.log(farmJson);
-  };
-
-  const fetchData = async () => {
-    const farmsResponse = await fetch(
-      "https://smart-pv.herokuapp.com/management/farms",
-      { method: "GET" }
-    );
-
-    const farmsIds = await farmsResponse.json();
-
-    fetchFarm(farmsIds[0]);
   };
 
   useLayoutEffect(() => {
-    fetchData();
+    fetchFarm();
   }, []);
 
   return (

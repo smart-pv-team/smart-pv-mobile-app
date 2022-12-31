@@ -26,9 +26,6 @@ export default function HomeScreen({ navigation }) {
   const [activeDevicesNum, setActiveDevicesNum] = useState(0);
   const [devicesNum, setDevicesNum] = useState(0);
   const [workingHours, setWorkingHours] = useState(0);
-  const promises = [];
-  var tempDevices = [];
-  var tempHours = 0;
 
   const data1 = [
     { x: -2, y: 1 },
@@ -39,56 +36,29 @@ export default function HomeScreen({ navigation }) {
     { x: 10, y: 1 },
   ];
 
-  const asyncGetDevice = (deviceId) => {
-    return new Promise((resolve) => {
-      fetch(`https://smart-pv.herokuapp.com/consumption/devices/${deviceId}`, {
-        method: "GET",
-      })
-        .then((response) => response.json())
-        .then((responseJson) => {
-          tempDevices.push(responseJson);
-          // console.log(responseJson);
-          tempHours += responseJson["workingHours"];
-        })
-        .then(() => {
-          resolve();
-        });
-    });
-  };
-
   const fetchData = async () => {
-    const farmResponse = await fetch(
-      "https://smart-pv.herokuapp.com/management/farms",
-      { method: "GET" }
-    );
-    const farmId = await farmResponse.json();
+    try {
+      const productionResponse = await fetch(
+        `https://smart-pv.herokuapp.com/measurement/farms/${global.farmId}/statistics/sum`,
+        { method: "GET" }
+      );
 
-    const productionResponse = await fetch(
-      `https://smart-pv.herokuapp.com/measurement/farms/${farmId}/statistics/sum`,
-      { method: "GET" }
-    );
+      const production = await productionResponse.json();
+      setProduction(production);
 
-    const production = await productionResponse.json();
-    setProduction(production);
+      const devicesResponse = await fetch(
+        `https://smart-pv.herokuapp.com/management/farms/${global.farmId}/consumption/devices`,
+        { method: "GET" }
+      );
+      var devicesRes = await devicesResponse.json();
+      var hours = devicesRes.map((x) => x.workingHours).reduce((a, b) => a + b);
 
-    const devicesIdResponse = await fetch(
-      `https://smart-pv.herokuapp.com/consumption/devices`,
-      { method: "GET" }
-    );
-
-    const deviceIds = await devicesIdResponse.json();
-
-    for (var i = 0; i < deviceIds.length; i++) {
-      promises.push(asyncGetDevice(deviceIds[i]));
+      setDevicesNum(devicesRes.length);
+      setActiveDevicesNum(devicesRes.filter((x) => x.isOn).length);
+      setWorkingHours(hours);
+    } catch (errorMessage) {
+      console.log(errorMessage);
     }
-
-    tempHours = 0;
-    Promise.all(promises).then(() => {
-      setActiveDevicesNum(tempDevices.filter((x) => x.isOn).length);
-      setWorkingHours(tempHours);
-    });
-
-    setDevicesNum(deviceIds.length);
   };
 
   useLayoutEffect(() => {
@@ -188,55 +158,6 @@ export default function HomeScreen({ navigation }) {
           </View>
         </View>
       </View>
-      {/* <View style={styles.upperContainer}>
-        <View style={styles.twoSmaller}>
-          <TouchableOpacity
-            style={styles.smallContainer}
-            onPress={() => {
-              navigation.navigate("ActiveDevices");
-            }}
-          >
-            <View style={styles.circle}>
-              <Text style={[styles.text, { fontSize: 40, fontWeight: "" }]}>
-                3
-              </Text>
-            </View>
-            <View style={{ paddingTop: 8 }}>
-              <Text style={[styles.text, { fontSize: 18, fontWeight: "" }]}>
-                Active devices
-              </Text>
-            </View>
-          </TouchableOpacity>
-          <View style={styles.smallContainer}>
-            <View style={styles.circle}>
-              <Text style={[styles.text, { fontSize: 18, fontWeight: "600" }]}>
-                3954,32 kW
-              </Text>
-            </View>
-            <View style={{ paddingTop: 8 }}>
-              <Text style={[styles.text, { fontSize: 18, fontWeight: "" }]}>
-                Production
-              </Text>
-            </View>
-          </View>
-        </View>
-        <View style={styles.oneTall}>
-          <View style={styles.tallContainer}>
-            <View style={styles.containerTitle}>
-              <Text style={{ fontSize: 20 }}>Information</Text>
-            </View>
-            <View style={styles.infoContent}>
-              <FlatList
-                data={activeDevices}
-                renderItem={renderDevice}
-                keyExtractor={(item) => item.id}
-                showsVerticalScrollIndicator={false}
-                overScrollMode={"never"}
-              />
-            </View>
-          </View>
-        </View>
-      </View> */}
       <View style={styles.lowerContainer}>
         <Chart
           viewport={{ size: { width: 10 } }}

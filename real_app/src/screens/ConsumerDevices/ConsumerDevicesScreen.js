@@ -13,40 +13,18 @@ import styles from "./styles";
 
 export default function ConsumerDevicesScreen({ navigation, onlyActive }) {
   const [devices, setDevices] = useState([]);
-  var tempDevices = [];
-  const promises = [];
-
-  const asyncGetDevice = (deviceId) => {
-    return new Promise((resolve) => {
-      fetch(`https://smart-pv.herokuapp.com/consumption/devices/${deviceId}`, {
-        method: "GET",
-      })
-        .then((response) => response.json())
-        .then((responseJson) => tempDevices.push(responseJson))
-        .then(() => {
-          resolve();
-        });
-    });
-  };
 
   const fetchData = async () => {
     const devicesResponse = await fetch(
-      "https://smart-pv.herokuapp.com/consumption/devices",
+      `https://smart-pv.herokuapp.com/management/farms/${global.farmId}/consumption/devices`,
       { method: "GET" }
     );
+    var devicesRes = await devicesResponse.json();
 
-    const deviceIds = await devicesResponse.json();
-
-    for (var i = 0; i < deviceIds.length; i++) {
-      promises.push(asyncGetDevice(deviceIds[i]));
+    if (onlyActive) {
+      devicesRes = devicesRes.filter((x) => x.isOn);
     }
-
-    Promise.all(promises).then(() => {
-      if (onlyActive) {
-        tempDevices = tempDevices.filter((x) => x.isOn);
-      }
-      setDevices(tempDevices);
-    });
+    setDevices(devicesRes);
   };
 
   useLayoutEffect(() => {

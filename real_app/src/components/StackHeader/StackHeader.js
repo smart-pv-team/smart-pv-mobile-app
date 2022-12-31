@@ -18,6 +18,7 @@ export default function StackHeader({ navigation, name }) {
           style={[styles.icon]}
           onPress={() => {
             navigation.goBack();
+            // navigation.navigate(global.parent);
           }}
         >
           <MaterialIcons

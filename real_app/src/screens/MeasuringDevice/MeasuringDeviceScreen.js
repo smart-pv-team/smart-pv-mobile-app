@@ -79,7 +79,7 @@ export default function ConsumerDeviceScreen({ route, navigation }) {
 
   const getFarmName = async () => {
     const response = await fetch(
-      `https://smart-pv.herokuapp.com/management/farms/${farmId}`,
+      `https://smart-pv.herokuapp.com/management/farms/${global.farmId}`,
       { method: "GET" }
     );
     const responseJson = await response.json();
@@ -150,15 +150,15 @@ export default function ConsumerDeviceScreen({ route, navigation }) {
           viewport={{ size: { width: 100 } }}
           style={{ height: 260, width: "100%" }}
           xDomain={{ min: 0, max: 4000 }}
-          yDomain={{ min: -30000, max: 10000 }}
+          yDomain={{ min: -30000, max: -1000 }}
           // xLabels={"jan"}
-          yLabels={["OFF", "ON"]}
+          // yLabels={["OFF", "ON"]}
           padding={{ left: 25, top: 10, bottom: 20, right: 20 }}
         >
           <VerticalAxis
             tickCount={2}
             // tickValues={[0, 1]}
-            tickValues={[0]}
+            // tickValues={[0]}
             theme={{
               labels: {
                 // label: { rotation: -20 },

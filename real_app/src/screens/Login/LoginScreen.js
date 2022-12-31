@@ -9,6 +9,7 @@ import {
 } from "react-native";
 import { LinearGradient } from "expo-linear-gradient";
 import { signInFirebase } from "../../firebaseConfig";
+// import { farmId } from "../../global";
 
 import styles from "./styles";
 
@@ -16,6 +17,23 @@ export default function LoginScreen({ setIsSignedIn }) {
   const [login, setLogin] = useState("");
   const [password, setPassword] = useState("");
   const [incorrectCredentials, setIncorrectCredentials] = useState(false);
+
+  const fetchData = async (userToken) => {
+    const userInfoResponse = await fetch(
+      `https://smart-pv.herokuapp.com/api/user/token/${userToken}`,
+      { method: "GET" }
+    );
+    const userInfo = await userInfoResponse.json();
+
+    const adminInfoResponse = await fetch(
+      `https://smart-pv.herokuapp.com/api/admin/token/${userInfo.adminId}`,
+      { method: "GET" }
+    );
+    const adminInfo = await adminInfoResponse.json();
+
+    global.farmId = adminInfo.farmId;
+    console.log("FARM ID IN LOGIN SCREEN", farmId);
+  };
 
   return (
     <KeyboardAvoidingView style={styles.container}>
@@ -76,8 +94,8 @@ export default function LoginScreen({ setIsSignedIn }) {
         style={[styles.loginButton]}
         onPress={async () => {
           try {
-            const user = await signInFirebase(login, password);
-            console.log(user);
+            const { user } = await signInFirebase(login, password);
+            await fetchData(user.uid);
             setIncorrectCredentials(false);
             setIsSignedIn(true);
           } catch (errorMessage) {

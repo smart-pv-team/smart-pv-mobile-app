@@ -1,1 +1,3 @@
-global.isSignedIn = false;
+import { useState } from "react";
+
+// global.farmId = "";

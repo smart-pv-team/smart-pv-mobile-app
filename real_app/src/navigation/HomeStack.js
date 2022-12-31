@@ -5,10 +5,11 @@ import StackHeader from "../components/StackHeader/StackHeader";
 import React from "react";
 import AppStyles from "../AppStyles";
 import ConsumerDevicesScreen from "../screens/ConsumerDevices/ConsumerDevicesScreen";
+import ConsumerDeviceScreen from "../screens/ConsumerDevice/ConsumerDeviceScreen";
 
 const Stack = createStackNavigator();
 
-export default function HomeStack() {
+export default function HomeStack({ farmId }) {
   return (
     <Stack.Navigator
       screenOptions={{
@@ -45,6 +46,16 @@ export default function HomeStack() {
         }}
       >
         {(props) => <ConsumerDevicesScreen {...props} onlyActive={false} />}
+      </Stack.Screen>
+      <Stack.Screen
+        name="ConsumerDevice"
+        options={{
+          header: ({ navigation }) => (
+            <StackHeader navigation={navigation} name="Consumer Device" />
+          ),
+        }}
+      >
+        {(props) => <ConsumerDeviceScreen {...props} />}
       </Stack.Screen>
     </Stack.Navigator>
   );
