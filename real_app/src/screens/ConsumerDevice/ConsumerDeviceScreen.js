@@ -19,9 +19,9 @@ export default function ConsumerDeviceScreen({ route, navigation }) {
   ]);
   const [yLabels, setYLabels] = useState(["OFF", "ON"]);
   const [xLabels, setXLabels] = useState([1]);
-  const [yDomain, setYDomain] = useState({ min: 0, max: 1.05 });
+  const [yDomain, setYDomain] = useState({ min: 0, max: 1.25 });
   const [xDomain, setXDomain] = useState({ min: 0, max: 7 });
-  var maxY = 1.05;
+  var maxY = 1.25;
 
   const [viewportWidth, setViewportWidth] = useState(7);
   const [horizontalTickValues, setHorizontalTickValues] = useState([]);
@@ -66,6 +66,7 @@ export default function ConsumerDeviceScreen({ route, navigation }) {
     controlParameters,
     creationDate,
     farmId,
+    id,
   } = route.params;
 
   const [labels, setLabels] = useState([
@@ -127,7 +128,32 @@ export default function ConsumerDeviceScreen({ route, navigation }) {
     setFarmName(responseJson.name);
   };
 
-  const asyncGetDayReading = (fromD, toD, id) => {
+  const getLastDayReadings = async () => {
+    var endDate = new Date();
+    var startDate = new Date(endDate);
+    var tempData = [{ x: 0, y: 0 }];
+    var previous = false;
+    startDate.setDate(startDate.getDate() - 1);
+    const response = await fetch(
+      `https://smart-pv.herokuapp.com/consumption/devices/${id}/range?startDate=${startDate.toISOString()}&endDate=${endDate.toISOString()}`,
+      { method: "GET" }
+    );
+    const responseJson = await response.json();
+
+    for (const [index, [key, value]] of Object.entries(
+      Object.entries(responseJson)
+    )) {
+      if (previous != value) {
+        tempData.push({ x: parseInt(index), y: previous === true ? 1 : 0 });
+        tempData.push({ x: parseInt(index), y: value === true ? 1 : 0 });
+      }
+      previous = value;
+    }
+    console.log(tempData.length);
+    setActivityMeasurements(tempData);
+  };
+
+  const asyncGetDayReading = (fromD, toD, iterId) => {
     console.log(fromDate, toDate);
     return new Promise((resolve) => {
       fetch(
@@ -140,10 +166,10 @@ export default function ConsumerDeviceScreen({ route, navigation }) {
         .then((responseJson) => {
           console.log(responseJson);
           if (responseJson > maxY) maxY = responseJson;
-          tempReadings.push({ x: id, y: 0 });
-          tempReadings.push({ x: id, y: responseJson });
-          tempReadings.push({ x: id + 0.5, y: responseJson });
-          tempReadings.push({ x: id + 0.5, y: 0 });
+          tempReadings.push({ x: iterId, y: 0 });
+          tempReadings.push({ x: iterId, y: responseJson });
+          tempReadings.push({ x: iterId + 0.5, y: responseJson });
+          tempReadings.push({ x: iterId + 0.5, y: 0 });
         })
         .then(() => resolve());
     });
@@ -190,6 +216,7 @@ export default function ConsumerDeviceScreen({ route, navigation }) {
 
   useLayoutEffect(() => {
     getFarmName();
+    getLastDayReadings();
   }, []);
 
   return (
@@ -287,12 +314,13 @@ export default function ConsumerDeviceScreen({ route, navigation }) {
                   },
                   oneWeekBorder,
                 ]}
-                onPress={() => {
+                onPress={async () => {
                   updateButtonStyle(0);
+                  await getLastDayReadings();
                   setVerticalTickValues([0, 1]);
                   // setVerticalTickCount(2);
                   setYLabels(["OFF", "ON"]);
-                  setYDomain({ min: 0, max: 1.05 });
+                  setYDomain({ min: 0, max: 1.25 });
                 }}
               >
                 <Text style={oneWeekStyle}>1 DAY</Text>
