@@ -113,10 +113,10 @@ export default function ConsumerDeviceScreen({ route, navigation }) {
       if (previous != responseEntries[i][1]) {
         tempData.push({ x: i, y: previous === true ? 1 : 0 });
         tempData.push({ x: i, y: responseEntries[i][1] === true ? 1 : 0 });
-        dates.push(
-          responseEntries[i][0].split("T")[1].split(":").slice(0, 2).join(":")
-        );
-        tempHorizontalValues.push(i);
+        // dates.push(
+        //   responseEntries[i][0].split("T")[1].split(":").slice(0, 2).join(":")
+        // );
+        // tempHorizontalValues.push(i);
       } else if (i % 5 == 0) {
         tempData.push({ x: i, y: responseEntries[i][1] === true ? 1 : 0 });
         dates.push(
@@ -204,7 +204,7 @@ export default function ConsumerDeviceScreen({ route, navigation }) {
 
   return (
     <View style={styles.container}>
-      <StatusBar />
+      <StatusBar backgroundColor={"#1C64BB"} />
       <View style={styles.graph}>
         <Chart
           viewport={{ size: { width: viewportWidth } }}
@@ -234,7 +234,10 @@ export default function ConsumerDeviceScreen({ route, navigation }) {
                 label: { rotation: 0 },
                 formatter: (v) => {
                   if (chartState != 0) return xLabels[v.toFixed(0)];
-                  return xLabels[Math.floor(v.toFixed(0) / 5) + 1];
+                  if (v % 5 == 0) {
+                    return xLabels[Math.floor(v.toFixed(0) / 5)];
+                  }
+                  return "";
                 },
               },
             }}
@@ -258,7 +261,7 @@ export default function ConsumerDeviceScreen({ route, navigation }) {
         <Text style={styles.chartTitle}>{chartName}</Text>
       </View>
       <LinearGradient
-        colors={[AppStyles.color.backgroundColor, "#969696"]}
+        colors={[AppStyles.color.backgroundColor, "#B6B6B6"]}
         start={{ x: 0.5, y: 0 }}
         end={{ x: 0.5, y: 1 }}
         style={{

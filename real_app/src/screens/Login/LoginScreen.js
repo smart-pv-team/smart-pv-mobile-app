@@ -6,10 +6,10 @@ import {
   TouchableOpacity,
   TextInput,
   KeyboardAvoidingView,
+  StatusBar,
 } from "react-native";
 import { LinearGradient } from "expo-linear-gradient";
 import { signInFirebase } from "../../firebaseConfig";
-// import { farmId } from "../../global";
 
 import styles from "./styles";
 
@@ -31,12 +31,14 @@ export default function LoginScreen({ setIsSignedIn }) {
     );
     const adminInfo = await adminInfoResponse.json();
 
+    console.log(adminInfo);
     global.farmId = adminInfo.farmId;
-    console.log("FARM ID IN LOGIN SCREEN", farmId);
+    global.userName = adminInfo.name;
   };
 
   return (
     <KeyboardAvoidingView style={styles.container}>
+      <StatusBar backgroundColor={"#1C64BB"} />
       <View
         style={{
           height: "50%",

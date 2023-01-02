@@ -21,19 +21,35 @@ export default function ConsumerDeviceScreen({ route, navigation }) {
     creationDate,
     deviceModel,
   } = route.params;
+
+  const [chartState, setChartState] = useState(0);
+  const [chartName, setChartName] = useState("Device activity");
+  const [yLabels, setYLabels] = useState([]);
+  const [xLabels, setXLabels] = useState([]);
+  const [yDomain, setYDomain] = useState({ min: 0, max: 1.25 });
+  const [xDomain, setXDomain] = useState({ min: 0, max: 7 });
+  var maxY = 1.25;
+  var minY = 0;
+
+  const [viewportWidth, setViewportWidth] = useState(50);
+  const [horizontalTickValues, setHorizontalTickValues] = useState([]);
+  const [verticalTickValues, setVerticalTickValues] = useState([0, 1]);
+  var dates = [];
+
+  var promises = [];
+  var tempReadings = [];
+
+  var toDate = new Date();
+  var day = toDate.getDate();
+  toDate.setDate(toDate.getDate() + 1);
+  if (toDate.getDate() === day) toDate.setDate(toDate.getDate() + 1);
+  toDate.setHours(0, 0, 0, 0);
+  var fromDate = new Date(toDate);
+  fromDate.setDate(fromDate.getDate() - 7);
+
   const [latestMeasurement, setLatestMeasurement] = useState();
   const [farmName, setFarmName] = useState();
-  const [measurements, setMeasurements] = useState([]);
-
-  // const yLabels = ["OFF", "ON"];
-  const [domainMinY, setDomainMinY] = useState(-10000);
-  const [domainMaxY, setDomainMaxY] = useState(10);
-
-  const [xLabels, setXLabels] = useState([]);
-
-  const currentDate = new Date();
-  const fromDate = new Date(currentDate);
-  fromDate.setDate(fromDate.getDate() - 7);
+  const [measurements, setMeasurements] = useState([{ x: 0, y: 0 }]);
 
   const [oneWeekStyle, setOneWeekStyle] = useState({ color: "gray" });
   const [oneMonthStyle, setOneMonthStyle] = useState({ color: "black" });
@@ -46,7 +62,6 @@ export default function ConsumerDeviceScreen({ route, navigation }) {
   const [threeMonthsBorder, setThreeMonthsBorder] = useState({
     borderColor: "black",
   });
-  // const [oneWeek]
 
   const buttonBorderSetters = [
     setOneWeekBorder,
@@ -86,49 +101,131 @@ export default function ConsumerDeviceScreen({ route, navigation }) {
     setFarmName(responseJson.name);
   };
 
-  const getChartData = async () => {
-    console.log("FROM DATE: ", fromDate);
+  const getLastDayReadings = async () => {
+    dates = [];
+    var endDate = new Date();
+    var startDate = new Date(endDate);
+    var tempData = [{ x: 0, y: 0 }];
+    var tempHorizontalValues = [];
+    var tempMaxY = 1;
+    var tempMinY = 0;
+    startDate.setDate(startDate.getDate() - 1);
+
     const response = await fetch(
-      `https://smart-pv.herokuapp.com/measurement/devices/${id}/range?startDate=${fromDate.toISOString()}&endDate=${currentDate.toISOString()}`,
+      `https://smart-pv.herokuapp.com/measurement/devices/${id}/range?startDate=${startDate.toISOString()}&endDate=${endDate.toISOString()}`,
       { method: "GET" }
     );
-
     const responseJson = await response.json();
-    console.log(response.status);
-    console.log("Length: ", responseJson.length);
+    var responseEntries = Object.entries(responseJson);
+    responseEntries.sort((a, b) => (a[1]["date"] > b[1]["date"] ? 1 : -1));
 
-    const tempData = [];
-    const tempDates = [];
-    for (var i = 0; i < responseJson.length; i++) {
-      if (i % 10 == 0) {
-        tempData.push({ x: i, y: responseJson[i].measurement });
+    for (let i = 1; i < responseEntries.length; i++) {
+      if (responseEntries[i][1]["measurement"] != null) {
+        var value = (responseEntries[i][1]["measurement"] / 1000).toFixed(2);
+        console.log(value);
+        tempData.push({ x: i, y: value });
+        // if (value > maxY) maxY = value;
+        // if (value < minY) minY = value;
+        if (value > tempMaxY) tempMaxY = value;
+        if (value < tempMinY) tempMinY = value;
+      } else {
+        tempData.push({ x: i, y: 0 });
       }
-      if (i % 10 == 0) tempDates.push(responseJson[i].date);
+      if (i % 5 == 0) {
+        dates.push(
+          responseEntries[i][1]["date"]
+            .split("T")[1]
+            .split(":")
+            .slice(0, 2)
+            .join(":")
+        );
+        tempHorizontalValues.push(i);
+      }
+    }
+    setMeasurements(tempData);
+    // setMaxY(tempMaxY);
+    // setMinY(tempMinY);
+    setYLabels([...Array(11).keys()].map((i) => i * 10 + -50));
+    setVerticalTickValues([...Array(11).keys()].map((i) => i * 10 + -50));
+    setXLabels(dates);
+    console.log(dates[dates.length - 1]);
+    console.log(dates.length, tempHorizontalValues.length);
+    setHorizontalTickValues(tempHorizontalValues);
+    setXDomain({ min: 0, max: responseEntries.length });
+    setYDomain({ min: -50, max: 50 });
+  };
+
+  const asyncGetDayReading = (fromD, toD, iterId) => {
+    return new Promise((resolve) => {
+      console.log(
+        `https://smart-pv.herokuapp.com/measurement/farms/${
+          global.farmId
+        }/statistics/period?startDate=${fromD.toISOString()}&endDate=${toD.toISOString()}`
+      );
+      fetch(
+        `https://smart-pv.herokuapp.com/measurement/farms/${
+          global.farmId
+        }/statistics/period?startDate=${fromD.toISOString()}&endDate=${toD.toISOString()}`,
+        { method: "GET" }
+      )
+        .then((response) => response.json())
+        .then((responseJson) => {
+          if (responseJson > maxY) maxY = responseJson;
+          if (responseJson < minY) minY = responseJson;
+          tempReadings.push({ x: iterId, y: 0 });
+          tempReadings.push({ x: iterId, y: responseJson });
+          tempReadings.push({ x: iterId + 0.5, y: responseJson });
+          tempReadings.push({ x: iterId + 0.5, y: 0 });
+        })
+        .then(() => resolve());
+    });
+  };
+
+  const getReadingsByDay = async (days) => {
+    tempReadings = [];
+    dates = [];
+
+    toDate = new Date();
+    var day = toDate.getDate();
+    toDate.setDate(toDate.getDate() + 1);
+    if (toDate.getDate() === day) toDate.setDate(toDate.getDate() + 1);
+    toDate.setHours(0, 0, 0, 0);
+    fromDate = new Date(toDate);
+    fromDate.setDate(toDate.getDate() - days);
+    for (let i = 0; i < days; i++) {
+      toDate = new Date(fromDate);
+      toDate.setDate(toDate.getDate() + 1);
+      promises.push(asyncGetDayReading(fromDate, toDate, i));
+      dates.push(
+        toDate
+          .toISOString()
+          .split("T")[0]
+          .split("-")
+          .slice(1, 3)
+          .reverse()
+          .join("/")
+      );
+      fromDate.setDate(fromDate.getDate() + 1);
     }
 
-    if (tempData.length > 4000) {
-      setMeasurements(tempData.slice(0, 4000));
-      setXLabels(tempDates.slice(0, 4000 / 10));
-      console.log("LABELS1: ", xLabels.length);
-    } else {
-      setMeasurements(tempData);
-      setXLabels(tempDates);
-      console.log("LABELS2: ", xLabels.length);
-    }
-    console.log(domainMaxY, domainMinY);
-    setDomainMaxY(Math.max(...measurements.map((o) => o.y)) + 1);
-    setDomainMinY(
-      Math.min(...measurements.map((o) => o.y).filter((o) => o.y != 1)) - 1
-    );
+    Promise.all(promises).then(async () => {
+      // console.log(tempReadings);
+      setMeasurements(tempReadings);
+      setYDomain({ min: minY - 10, max: maxY + 10 });
+      var tempArr = [...Array(Math.floor(maxY) + 20).keys()]
+        .filter((x) => x % Math.floor(maxY / 10) == 0)
+        .map((x) => Math.round(x / 10) * 10);
+      setVerticalTickValues(tempArr);
+      setYLabels(tempArr);
+      setXLabels(dates);
+      setChartName("Energy produced [kW]");
+    });
   };
 
   useLayoutEffect(() => {
     getLatestMeasurement();
     getFarmName();
-    if (measurements.length == 0) {
-      getChartData();
-    }
-    console.log("UseLayoutEffect");
+    getLastDayReadings();
   }, []);
 
   const setFromDate = (subtractDays = 0, subtractMonths = 0) => {
@@ -138,78 +235,62 @@ export default function ConsumerDeviceScreen({ route, navigation }) {
 
   return (
     <View style={styles.container}>
-      <StatusBar />
-      {/* <LinearGradient
-        colors={["white", "#969696"]}
-        start={{ x: 0.5, y: 0 }}
-        end={{ x: 0.5, y: 1 }}
-        style={{ flex: 1, width: "100%" }}
-      > */}
+      <StatusBar backgroundColor={"#1C64BB"} />
       <View style={styles.graph}>
         <Chart
-          viewport={{ size: { width: 100 } }}
+          viewport={{ size: { width: viewportWidth } }}
           style={{ height: 260, width: "100%" }}
-          xDomain={{ min: 0, max: 4000 }}
-          yDomain={{ min: -30000, max: -1000 }}
-          // xLabels={"jan"}
-          // yLabels={["OFF", "ON"]}
+          xDomain={xDomain}
+          yDomain={yDomain}
           padding={{ left: 25, top: 10, bottom: 20, right: 20 }}
         >
           <VerticalAxis
-            tickCount={2}
-            // tickValues={[0, 1]}
-            // tickValues={[0]}
+            tickValues={verticalTickValues}
             theme={{
               labels: {
                 // label: { rotation: -20 },
-                label: { fontSize: 8, fontWeight: "500" },
+                label: { fontSize: 8, fontWeight: "400" },
                 formatter: (v) => v.toFixed(1),
               },
             }}
           />
           <HorizontalAxis
-            tickCount={Math.floor(xLabels.length / 10)} //TODO must be the same in the formatter
-            // tickCount={4}
-            // tickValues={[2]}
-            // tickCount={20}
-            includeOriginTick={false}
+            tickValues={horizontalTickValues}
             theme={{
               axis: { stroke: { color: "#aaa", width: 2 } },
               ticks: { stroke: { color: "#aaa", width: 2 } },
               labels: {
                 label: { rotation: 0 },
-                formatter: (v) => xLabels[Math.floor(v / 10)], //TODO - have to make the ticks land on the actual data points and not "randomly"
+                formatter: (v) => {
+                  if (chartState == 0) {
+                    return xLabels[Math.floor(v / 5) - 1];
+                  }
+                  return v;
+                },
               },
             }}
           />
-          {measurements.length != 0 && (
-            <Area
-              theme={{
-                gradient: {
-                  from: { color: "#227BEA", opacity: 0.75 },
-                  to: { color: "#227BEA", opacity: 0.1 },
-                },
-              }}
-              data={measurements}
-            />
-          )}
-          {measurements.length != 0 && (
-            <Line
-              data={measurements}
-              smoothing="none"
-              theme={{ stroke: { color: "#227BEA", width: 1 } }}
-            />
-          )}
-          {/* <Line
-            data={data2}
-            smoothing="cubic-spline"
-            theme={{ stroke: { color: "blue", width: 1 } }}
+
+          {/* <Area
+            theme={{
+              gradient: {
+                from: { color: "#227BEA", opacity: 0.75 },
+                to: { color: "#227BEA", opacity: 0.1 },
+              },
+            }}
+            data={measurements}
           /> */}
+
+          <Line
+            data={measurements}
+            smoothing="none"
+            theme={{ stroke: { color: "#227BEA", width: 1 } }}
+          />
         </Chart>
-        <Text style={styles.chartTitle}>Energy produced</Text>
+        <Text style={styles.chartTitle}>Energy produced [kW]</Text>
       </View>
       <LinearGradient
-        colors={[AppStyles.color.backgroundColor, "#969696"]}
+        colors={[AppStyles.color.backgroundColor, "#B6B6B6"]}
         start={{ x: 0.5, y: 0 }}
         end={{ x: 0.5, y: 1 }}
         style={{
@@ -239,12 +320,12 @@ export default function ConsumerDeviceScreen({ route, navigation }) {
                   oneWeekBorder,
                 ]}
                 onPress={() => {
+                  setChartState(0);
                   updateButtonStyle(0);
-                  setFromDate(7, 0);
-                  getChartData();
+                  getLastDayReadings();
                 }}
               >
-                <Text style={oneWeekStyle}>1 WEEK</Text>
+                <Text style={oneWeekStyle}>1 DAY</Text>
               </TouchableOpacity>
             </View>
             <View style={{ flex: 1 }}>
@@ -256,11 +337,10 @@ export default function ConsumerDeviceScreen({ route, navigation }) {
                 ]}
                 onPress={() => {
                   updateButtonStyle(1);
-                  setFromDate(0, 1);
-                  getChartData();
+                  getReadingsByDay(7);
                 }}
               >
-                <Text style={oneMonthStyle}>1 MONTH</Text>
+                <Text style={oneMonthStyle}>1 WEEK</Text>
               </TouchableOpacity>
             </View>
             <View style={{ flex: 1 }}>
@@ -268,7 +348,6 @@ export default function ConsumerDeviceScreen({ route, navigation }) {
                 style={[
                   styles.button,
                   {
-                    // borderLeftWidth: 0,
                     borderBottomRightRadius: 9,
                     borderTopRightRadius: 9,
                   },
@@ -276,11 +355,11 @@ export default function ConsumerDeviceScreen({ route, navigation }) {
                 ]}
                 onPress={() => {
                   updateButtonStyle(2);
-                  setFromDate(0, 3);
-                  getChartData();
+                  // setFromDate(0, 3);
+                  getReadingsByDay(30);
                 }}
               >
-                <Text style={threeMonthsStyle}>3 MONTHS</Text>
+                <Text style={threeMonthsStyle}>1 MONTH</Text>
               </TouchableOpacity>
             </View>
           </View>
@@ -303,8 +382,6 @@ export default function ConsumerDeviceScreen({ route, navigation }) {
                 <View
                   style={{
                     flex: 0.7,
-                    // backgroundColor: AppStyles.color.primaryColor,
-                    // backgroundColor: "#EBEBEB",
                   }}
                 >
                   <View style={[styles.cell]}>

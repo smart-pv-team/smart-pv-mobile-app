@@ -26,9 +26,9 @@ export default function FarmScreen({ route, navigation }) {
 
   return (
     <View style={styles.container}>
-      <StatusBar />
+      <StatusBar backgroundColor={"#1C64BB"} />
       <LinearGradient
-        colors={[AppStyles.color.backgroundColor, "#969696"]}
+        colors={[AppStyles.color.backgroundColor, "#B6B6B6"]}
         start={{ x: 0.5, y: 0 }}
         end={{ x: 0.5, y: 1 }}
         style={{

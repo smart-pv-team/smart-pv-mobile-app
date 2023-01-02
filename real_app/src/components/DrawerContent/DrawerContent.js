@@ -25,7 +25,7 @@ export default function CustomDrawerContent({ props, setIsSignedIn }) {
             source={require("../../../assets/default_avatar.jpg")}
             style={styles.profileImage}
           />
-          <Text style={styles.profileText}>Adam</Text>
+          <Text style={styles.profileText}>{global.userName}</Text>
         </View>
         <DrawerContentScrollView {...props}>
           <DrawerItemList {...props} />
