@@ -31,7 +31,6 @@ export default function LoginScreen({ setIsSignedIn }) {
     );
     const adminInfo = await adminInfoResponse.json();
 
-    console.log(adminInfo);
     global.farmId = adminInfo.farmId;
     global.userName = adminInfo.name;
   };

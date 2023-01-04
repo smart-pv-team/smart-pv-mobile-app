@@ -113,10 +113,6 @@ export default function ConsumerDeviceScreen({ route, navigation }) {
       if (previous != responseEntries[i][1]) {
         tempData.push({ x: i, y: previous === true ? 1 : 0 });
         tempData.push({ x: i, y: responseEntries[i][1] === true ? 1 : 0 });
-        // dates.push(
-        //   responseEntries[i][0].split("T")[1].split(":").slice(0, 2).join(":")
-        // );
-        // tempHorizontalValues.push(i);
       } else if (i % 5 == 0) {
         tempData.push({ x: i, y: responseEntries[i][1] === true ? 1 : 0 });
         dates.push(
@@ -133,16 +129,14 @@ export default function ConsumerDeviceScreen({ route, navigation }) {
     setYLabels(["OFF", "ON"]);
     setYDomain({ min: 0, max: 1.25 });
     setXDomain({ min: 0, max: 720 });
-    setViewportWidth(20);
+    setViewportWidth(40);
     setChartName("Device activity");
   };
 
   const asyncGetDayReading = (fromD, toD, iterId) => {
     return new Promise((resolve) => {
       fetch(
-        `https://smart-pv.herokuapp.com/consumption/farms/${
-          global.farmId
-        }/statistics/period?startDate=${fromD.toISOString()}&endDate=${toD.toISOString()}`,
+        `https://smart-pv.herokuapp.com/consumption/devices/${id}/statistics/period?startDate=${fromD.toISOString()}&endDate=${toD.toISOString()}`,
         { method: "GET" }
       )
         .then((response) => response.json())
@@ -186,14 +180,12 @@ export default function ConsumerDeviceScreen({ route, navigation }) {
 
     Promise.all(promises).then(async () => {
       setActivityMeasurements(tempReadings);
-      setYDomain({ min: 0, max: maxY + 40 });
-      var tempArr = [...Array(Math.floor(maxY) + 20).keys()]
-        .filter((x) => x % Math.floor(maxY / 10) == 0)
-        .map((x) => Math.round(x / 10) * 10);
+      setYDomain({ min: 0, max: 28 });
+      var tempArr = [...Array(25).keys()].filter((x) => x % 4 == 0);
       setVerticalTickValues(tempArr);
       setYLabels(tempArr);
       setXLabels(dates);
-      setChartName("Device activity (minutes)");
+      setChartName("Device activity (hours)");
     });
   };
 
@@ -435,7 +427,7 @@ export default function ConsumerDeviceScreen({ route, navigation }) {
                       },
                     ]}
                   >
-                    <Text>{controlParameters.powerConsumption} [kWh]</Text>
+                    <Text>{controlParameters.powerConsumption} [kW]</Text>
                   </View>
                   <View
                     style={[

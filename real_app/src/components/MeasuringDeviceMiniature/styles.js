@@ -8,11 +8,9 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     alignItems: "center",
-    // justifyContent: "center",
     flexDirection: "column",
     paddingTop: 0,
     padding: 10,
-    // backgroundColor: "#888",
     borderRadius: 9,
     borderColor: "#333",
     borderWidth: 1,
@@ -26,10 +24,6 @@ const styles = StyleSheet.create({
   deviceImage: {
     flex: 1,
     resizeMode: "contain",
-    // overflow: "hidden",
-    // height: 100,
-    // width: 100,
-    // borderRadius: 9,
   },
   briefInfo: {
     flex: 1,

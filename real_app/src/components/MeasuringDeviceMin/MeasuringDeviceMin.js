@@ -5,7 +5,6 @@ import styles from "./styles";
 
 export default function MeasuringDeviceMin({
   deviceName,
-  // deviceStatus,
   deviceModel,
   production,
 }) {
@@ -38,7 +37,6 @@ export default function MeasuringDeviceMin({
               flexDirection: "column",
               height: "100%",
               flex: 2.5,
-              // backgroundColor: AppStyles.color.primaryColor,
             },
           ]}
         >

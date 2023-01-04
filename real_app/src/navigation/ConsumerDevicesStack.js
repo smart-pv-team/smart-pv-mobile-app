@@ -18,7 +18,6 @@ export default function ConsumerDevicesStack() {
           },
         }}
         name="ConsumerDevicesScreen"
-        // component={ConsumerDevicesScreen}
         options={{
           header: ({ navigation }) => (
             <DrawerHeader navigation={navigation} name="Consumer Devices" />

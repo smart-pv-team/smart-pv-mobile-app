@@ -28,7 +28,6 @@ function LeftDrawerScreen({ isSignedIn, setIsSignedIn, farmId }) {
           width: 251,
         },
         drawerLabelStyle: {
-          // marginLeft: 5,
           color: "white",
         },
         drawerActiveBackgroundColor: "#227BEA",
@@ -73,7 +72,7 @@ function LeftDrawerScreen({ isSignedIn, setIsSignedIn, farmId }) {
         options={{
           drawerIcon: () => (
             <MaterialIcons
-              name="monitor" //ballot
+              name="monitor"
               size={30}
               style={{ color: "white" }}
             />

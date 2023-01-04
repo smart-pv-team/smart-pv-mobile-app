@@ -28,7 +28,6 @@ const styles = StyleSheet.create({
     left: 10,
     bottom: 15,
     right: 10,
-    // backgroundColor: "#F5F5F5",
     backgroundColor: "#191919",
   },
   settingText: {

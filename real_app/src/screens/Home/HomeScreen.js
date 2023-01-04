@@ -1,4 +1,4 @@
-import React, { useState, useLayoutEffect } from "react";
+import React, { useState, useLayoutEffect, useEffect } from "react";
 import { Text, View, StatusBar, TouchableOpacity } from "react-native";
 import {
   Chart,
@@ -45,20 +45,18 @@ export default function HomeScreen({ navigation }) {
     var tempMinY = 0;
     startDate.setDate(startDate.getDate() - 1);
     const response = await fetch(
-      `https://smart-pv.herokuapp.com/measurement/devices/630253d45e565a13b64cbf59/range?startDate=${startDate.toISOString()}&endDate=${endDate.toISOString()}`,
+      // `https://smart-pv.herokuapp.com/measurement/devices/630253d45e565a13b64cbf59/range?startDate=${startDate.toISOString()}&endDate=${endDate.toISOString()}`,
+      `https://smart-pv.herokuapp.com/management/farms/${farmId}/measurement/range?startDate=${startDate.toISOString()}&endDate=${endDate.toISOString()}`,
       { method: "GET" }
     );
     const responseJson = await response.json();
     var responseEntries = Object.entries(responseJson);
-    responseEntries.sort((a, b) => (a[1]["date"] > b[1]["date"] ? 1 : -1));
+    responseEntries.sort((a, b) => (a[0] > b[0] ? 1 : -1));
 
     for (let i = 1; i < responseEntries.length; i++) {
-      if (responseEntries[i][1]["measurement"] != null) {
-        var value = (responseEntries[i][1]["measurement"] / 1000).toFixed(2);
-        console.log(value);
+      if (responseEntries[i][1] != null) {
+        var value = (responseEntries[i][1] / 1000).toFixed(2);
         tempData.push({ x: i, y: value });
-        // if (value > maxY) maxY = value;
-        // if (value < minY) minY = value;
         if (value > tempMaxY) tempMaxY = value;
         if (value < tempMinY) tempMinY = value;
       } else {
@@ -66,11 +64,7 @@ export default function HomeScreen({ navigation }) {
       }
       if (i % 5 == 0) {
         dates.push(
-          responseEntries[i][1]["date"]
-            .split("T")[1]
-            .split(":")
-            .slice(0, 2)
-            .join(":")
+          responseEntries[i][0].split("T")[1].split(":").slice(0, 2).join(":")
         );
         tempHorizontalValues.push(i);
       }
@@ -79,13 +73,13 @@ export default function HomeScreen({ navigation }) {
     // setMaxY(tempMaxY);
     // setMinY(tempMinY);
     setYLabels([...Array(11).keys()].map((i) => i * 10 + -50));
-    setVerticalTickValues([...Array(11).keys()].map((i) => i * 10 + -50));
+    setVerticalTickValues(
+      [...Array(21).keys()].filter((x) => x % 2 == 0).map((i) => i * 10 + -100)
+    );
     setXLabels(dates);
-    console.log(dates[dates.length - 1]);
-    console.log(dates.length, tempHorizontalValues.length);
     setHorizontalTickValues(tempHorizontalValues);
     setXDomain({ min: 0, max: responseEntries.length });
-    setYDomain({ min: -50, max: 50 });
+    setYDomain({ min: -100, max: 100 });
   };
 
   const fetchData = async () => {
@@ -213,19 +207,16 @@ export default function HomeScreen({ navigation }) {
       </View>
       <View style={styles.lowerContainer}>
         <Chart
-          viewport={{ size: { width: 10 } }}
+          viewport={{ size: { width: 40 } }}
           style={styles.chart}
           xDomain={xDomain}
           yDomain={yDomain}
-          // xDomain={{ min: -2, max: 10 }}
-          // yDomain={{ min: -0.05, max: 1.05 }}
           padding={{ left: 25, top: 10, bottom: 30, right: 20 }}
         >
           <VerticalAxis
             tickValues={verticalTickValues}
             theme={{
               labels: {
-                // label: { rotation: -20 },
                 label: { fontSize: 8, fontWeight: "400" },
                 formatter: (v) => v.toFixed(1),
               },
@@ -261,7 +252,7 @@ export default function HomeScreen({ navigation }) {
             }}
           />
         </Chart>
-        <Text style={styles.chartTitle}>Total measurements</Text>
+        <Text style={styles.chartTitle}>Total measurements [kW]</Text>
       </View>
     </View>
   );

@@ -3,7 +3,6 @@ import { MaterialIcons } from "@expo/vector-icons";
 
 import styles from "./styles";
 import { LinearGradient } from "expo-linear-gradient";
-// import Linear
 
 export default function StackHeader({ navigation, name }) {
   return (
@@ -18,13 +17,11 @@ export default function StackHeader({ navigation, name }) {
           style={[styles.icon]}
           onPress={() => {
             navigation.goBack();
-            // navigation.navigate(global.parent);
           }}
         >
           <MaterialIcons
             name="chevron-left"
             size={32}
-            // onPress={() => navigation.goBack()}
             style={{ color: "white" }}
           />
         </TouchableOpacity>

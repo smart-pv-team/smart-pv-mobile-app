@@ -13,16 +13,6 @@ const styles = StyleSheet.create({
     flexDirection: "row",
   },
   lowerSmall: { flex: 1 },
-  // upperContainer: {
-  //   flex: 2,
-  //   flexDirection: "row",
-  // },
-  // twoSmaller: {
-  //   flex: 1,
-  // },
-  // oneTall: {
-  //   flex: 1,
-  // },
   lowerContainer: {
     flex: 1,
     backgroundColor: "purple",

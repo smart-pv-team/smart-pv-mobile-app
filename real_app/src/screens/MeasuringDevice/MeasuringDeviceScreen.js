@@ -83,6 +83,20 @@ export default function ConsumerDeviceScreen({ route, navigation }) {
     }
   };
 
+  const getVerticalLabels = (lowest, highest, steps) => {
+    var res = [0];
+    lowest /= 1000;
+    highest /= 1000;
+    highest = Math.round(highest / 10) * 10 + 10;
+    lowest = Math.round(lowest / 10) * 10 - 10;
+    const step = Math.floor((highest - lowest) / steps);
+    for (let i = 0; i < steps + 1; i++) {
+      if (Math.abs(lowest) >= 10) res.push(lowest);
+      lowest += step;
+    }
+    return res;
+  };
+
   const getLatestMeasurement = async () => {
     const response = await fetch(
       `https://smart-pv.herokuapp.com/measurement/devices/${id}/last`,
@@ -122,7 +136,6 @@ export default function ConsumerDeviceScreen({ route, navigation }) {
     for (let i = 1; i < responseEntries.length; i++) {
       if (responseEntries[i][1]["measurement"] != null) {
         var value = (responseEntries[i][1]["measurement"] / 1000).toFixed(2);
-        console.log(value);
         tempData.push({ x: i, y: value });
         // if (value > maxY) maxY = value;
         // if (value < minY) minY = value;
@@ -148,24 +161,16 @@ export default function ConsumerDeviceScreen({ route, navigation }) {
     setYLabels([...Array(11).keys()].map((i) => i * 10 + -50));
     setVerticalTickValues([...Array(11).keys()].map((i) => i * 10 + -50));
     setXLabels(dates);
-    console.log(dates[dates.length - 1]);
-    console.log(dates.length, tempHorizontalValues.length);
     setHorizontalTickValues(tempHorizontalValues);
     setXDomain({ min: 0, max: responseEntries.length });
     setYDomain({ min: -50, max: 50 });
+    setViewportWidth(40);
   };
 
   const asyncGetDayReading = (fromD, toD, iterId) => {
     return new Promise((resolve) => {
-      console.log(
-        `https://smart-pv.herokuapp.com/measurement/farms/${
-          global.farmId
-        }/statistics/period?startDate=${fromD.toISOString()}&endDate=${toD.toISOString()}`
-      );
       fetch(
-        `https://smart-pv.herokuapp.com/measurement/farms/${
-          global.farmId
-        }/statistics/period?startDate=${fromD.toISOString()}&endDate=${toD.toISOString()}`,
+        `https://smart-pv.herokuapp.com/measurement/devices/${id}/statistics/period?startDate=${fromD.toISOString()}&endDate=${toD.toISOString()}`,
         { method: "GET" }
       )
         .then((response) => response.json())
@@ -209,16 +214,17 @@ export default function ConsumerDeviceScreen({ route, navigation }) {
     }
 
     Promise.all(promises).then(async () => {
-      // console.log(tempReadings);
       setMeasurements(tempReadings);
-      setYDomain({ min: minY - 10, max: maxY + 10 });
+      setYDomain({ min: minY - 15000, max: maxY + 10 });
       var tempArr = [...Array(Math.floor(maxY) + 20).keys()]
         .filter((x) => x % Math.floor(maxY / 10) == 0)
         .map((x) => Math.round(x / 10) * 10);
-      setVerticalTickValues(tempArr);
-      setYLabels(tempArr);
+      var vL = getVerticalLabels(minY, maxY, 10);
+      setVerticalTickValues(vL.map((x) => x * 1000));
       setXLabels(dates);
       setChartName("Energy produced [kW]");
+      setChartState(1);
+      setViewportWidth(7);
     });
   };
 
@@ -236,21 +242,25 @@ export default function ConsumerDeviceScreen({ route, navigation }) {
   return (
     <View style={styles.container}>
       <StatusBar backgroundColor={"#1C64BB"} />
-      <View style={styles.graph}>
+      <View style={[styles.graph]}>
         <Chart
           viewport={{ size: { width: viewportWidth } }}
           style={{ height: 260, width: "100%" }}
           xDomain={xDomain}
           yDomain={yDomain}
-          padding={{ left: 25, top: 10, bottom: 20, right: 20 }}
+          padding={{ left: 30, top: 10, bottom: 20, right: 20 }}
         >
           <VerticalAxis
             tickValues={verticalTickValues}
             theme={{
               labels: {
-                // label: { rotation: -20 },
                 label: { fontSize: 8, fontWeight: "400" },
-                formatter: (v) => v.toFixed(1),
+                formatter: (v) => {
+                  if (chartState == 0) {
+                    return v.toFixed(1);
+                  }
+                  return (v / 1000).toFixed(1);
+                },
               },
             }}
           />
@@ -265,7 +275,7 @@ export default function ConsumerDeviceScreen({ route, navigation }) {
                   if (chartState == 0) {
                     return xLabels[Math.floor(v / 5) - 1];
                   }
-                  return v;
+                  return xLabels[Math.floor(v)];
                 },
               },
             }}
@@ -338,6 +348,10 @@ export default function ConsumerDeviceScreen({ route, navigation }) {
                 onPress={() => {
                   updateButtonStyle(1);
                   getReadingsByDay(7);
+                  setXDomain({ min: 0, max: 7 });
+                  setHorizontalTickValues(
+                    [...Array(7).keys()].map((x) => x + 0.25)
+                  );
                 }}
               >
                 <Text style={oneMonthStyle}>1 WEEK</Text>
@@ -355,8 +369,11 @@ export default function ConsumerDeviceScreen({ route, navigation }) {
                 ]}
                 onPress={() => {
                   updateButtonStyle(2);
-                  // setFromDate(0, 3);
                   getReadingsByDay(30);
+                  setXDomain({ min: 0, max: 30 });
+                  setHorizontalTickValues(
+                    [...Array(30).keys()].map((x) => x + 0.25)
+                  );
                 }}
               >
                 <Text style={threeMonthsStyle}>1 MONTH</Text>
@@ -412,7 +429,6 @@ export default function ConsumerDeviceScreen({ route, navigation }) {
                 <View
                   style={{
                     flex: 1,
-                    // backgroundColor: "#EBEBEB",
                   }}
                 >
                   <View
@@ -424,7 +440,7 @@ export default function ConsumerDeviceScreen({ route, navigation }) {
                     ]}
                   >
                     <Text>
-                      {(latestMeasurement / 1000).toFixed(2) || ""} [kWh]
+                      {(latestMeasurement / 1000).toFixed(2) || ""} [kW]
                     </Text>
                   </View>
                   <View
@@ -442,7 +458,6 @@ export default function ConsumerDeviceScreen({ route, navigation }) {
                     style={[
                       styles.cell,
                       {
-                        // backgroundColor: "#EBEBEB",
                         borderRightWidth: 0,
                       },
                     ]}

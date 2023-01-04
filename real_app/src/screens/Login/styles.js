@@ -11,25 +11,15 @@ const styles = StyleSheet.create({
     borderRadius: 50,
     paddingLeft: 10,
   },
-  // appLogoContainer: {
-  //   alignItems: "center",
-  //   // flex: 1,
-  //   height: 100,
-  //   width: 100,
-  // },
   appLogo: {
-    // marginTop: 200,
     height: 130,
     width: 130,
-    // flex: 1,
-    // backgroundColor: "red",
     resizeMode: "contain",
   },
   appName: {
     justifyContent: "center",
     alignItems: "center",
     paddingTop: 10,
-    // flex: 1,
   },
   incorrectAuth: {
     height: 20,

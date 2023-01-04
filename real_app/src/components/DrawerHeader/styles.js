@@ -8,7 +8,6 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "center",
-    // borderBottomWidth: 1,
     borderTopLeftRadius: 0,
     borderTopRightRadius: 0,
     backgroundColor: "#93A661",
@@ -16,7 +15,6 @@ const styles = StyleSheet.create({
   },
   headerText: {
     fontSize: 23,
-    // fontFamily: "sans-serif-condensed",
     justifyContent: "center",
     alignContent: "center",
     alignItems: "center",
@@ -25,7 +23,6 @@ const styles = StyleSheet.create({
   icon: {
     position: "absolute",
     left: 20,
-    // color: "white",
   },
 });
 

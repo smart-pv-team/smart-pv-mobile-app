@@ -4,21 +4,12 @@ import { Dimensions } from "react-native";
 
 const styles = StyleSheet.create({
   container: { flex: 1, alignItems: "center" },
-  // deviceImage: {
-  //   // height: "100%",
-  //   width: "100%",
-  //   height: undefined,
-  //   // width: undefined,
-  //   aspectRatio: 1,
-  //   resizeMode: "contain",
-  // },
   deviceImage: { resizeMode: "contain", height: 200 },
   graph: {
     flex: 1,
+    paddingTop: 3,
     width: "100%",
     alignItems: "center",
-    // backgroundColor: "lightblue",
-    // justifyContent: "center",
   },
   chartTitle: {
     position: "absolute",
@@ -31,12 +22,10 @@ const styles = StyleSheet.create({
   buttons: {
     flexDirection: "row",
     width: "97%",
-    // backgroundColor: "red",
     justifyContent: "center",
     paddingTop: 10,
   },
   button: {
-    // width: Dimensions.get("screen").width / 3 - 3,
     height: 40,
     width: "100%",
     justifyContent: "center",
@@ -44,23 +33,11 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     backgroundColor: "white",
   },
-  // deviceInfo: {
-  //   flex: 1,
-  //   flexDirection: "column",
-  //   width: "100%",
-  //   paddingTop: 4,
-  //   borderColor: "#555",
-  //   borderWidth: 1,
-  //   borderRadius: 9,
-  //   overflow: "hidden",
-  // },
   deviceInfo: {
     flex: 1,
     flexDirection: "column",
     width: "100%",
     paddingTop: 8,
-    // borderColor: "gray",
-    // borderWidth: 1,
     borderRadius: 9,
     overflow: "hidden",
     backgroundColor: "white",
@@ -68,7 +45,6 @@ const styles = StyleSheet.create({
   detailedInfo: {
     flex: 5,
     flexDirection: "row",
-    // borderTopWidth: 1,
     borderTopColor: "#8C8C8C",
     backgroundColor: "#F5F5F5",
   },
