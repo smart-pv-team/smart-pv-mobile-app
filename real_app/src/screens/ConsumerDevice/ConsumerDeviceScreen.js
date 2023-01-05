@@ -400,7 +400,7 @@ export default function ConsumerDeviceScreen({ route, navigation }) {
                     {isOn && <Text>ON - for {4} hours</Text>}
                     {!isOn && (
                       <Text>
-                        Last active{" "}
+                        {/* Last active 2023/01/04 */}
                         {controlParameters.lastStatusChange
                           .split("T")[0]
                           .replace("-", "/")

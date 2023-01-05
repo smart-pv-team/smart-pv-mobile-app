@@ -104,6 +104,7 @@ export default function FarmScreen({ route, navigation }) {
                   {parseFloat(farm["minutesBetweenDeviceStatusSwitch"]) >
                     1.0 && (
                     <Text>
+                      {/* 2 minutes */}
                       {farm["minutesBetweenDeviceStatusSwitch"]} minutes
                     </Text>
                   )}

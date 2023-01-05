@@ -177,10 +177,12 @@ export default function ConsumerDeviceScreen({ route, navigation }) {
         .then((responseJson) => {
           if (responseJson > maxY) maxY = responseJson;
           if (responseJson < minY) minY = responseJson;
+          // tempReadings.push({ x: iterId, y: 20000 });
           tempReadings.push({ x: iterId, y: 0 });
           tempReadings.push({ x: iterId, y: responseJson });
           tempReadings.push({ x: iterId + 0.5, y: responseJson });
           tempReadings.push({ x: iterId + 0.5, y: 0 });
+          // tempReadings.push({ x: iterId + 0.5, y: 10000 });
         })
         .then(() => resolve());
     });
@@ -215,10 +217,8 @@ export default function ConsumerDeviceScreen({ route, navigation }) {
 
     Promise.all(promises).then(async () => {
       setMeasurements(tempReadings);
+      // setYDomain({ min: minY - 15000, max: 0 });
       setYDomain({ min: minY - 15000, max: maxY + 10 });
-      var tempArr = [...Array(Math.floor(maxY) + 20).keys()]
-        .filter((x) => x % Math.floor(maxY / 10) == 0)
-        .map((x) => Math.round(x / 10) * 10);
       var vL = getVerticalLabels(minY, maxY, 10);
       setVerticalTickValues(vL.map((x) => x * 1000));
       setXLabels(dates);

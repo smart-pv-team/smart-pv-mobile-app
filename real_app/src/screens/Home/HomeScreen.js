@@ -45,7 +45,6 @@ export default function HomeScreen({ navigation }) {
     var tempMinY = 0;
     startDate.setDate(startDate.getDate() - 1);
     const response = await fetch(
-      // `https://smart-pv.herokuapp.com/measurement/devices/630253d45e565a13b64cbf59/range?startDate=${startDate.toISOString()}&endDate=${endDate.toISOString()}`,
       `https://smart-pv.herokuapp.com/management/farms/${farmId}/measurement/range?startDate=${startDate.toISOString()}&endDate=${endDate.toISOString()}`,
       { method: "GET" }
     );
